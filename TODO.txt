@@ -1,0 +1,7 @@
+TODO
+----
+
+Überlegen was besser ist (gefühlsmäßig "has")
+    * Aggregate extends Entity
+    * Aggregate has (root isa Entity)
+
