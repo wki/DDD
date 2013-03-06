@@ -5,3 +5,15 @@ TODO
     * Aggregate extends Entity
     * Aggregate has (root isa Entity)
 
+
+Einfacher Vererbungs-Mechanismus bei Konfiguration:
+
+    'MyApp::Model::Domain' => {
+        # defaults for every class in 'MyApp::Model::Domain::xxx'
+        schema_from_model => 'DB',
+        ...
+    },
+    
+    'MyApp::Model::Domain::SomeClass' => {
+        # override defaults and/or set individual things
+    },
