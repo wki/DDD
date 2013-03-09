@@ -13,6 +13,11 @@ has root_dir => (
     required => 1,
 );
 
+has schema => (
+    is  => 'ro',
+    isa => 'DBIx::Class::Schema',
+);
+
 sub list_files {
     my $self = shift;;
     

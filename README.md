@@ -23,7 +23,7 @@ MyApp::Domain::Xxx
 
 ## Usage inside Catalyst Controller ##
 
-    my $agg = $c->model('Domain')->aggregate_name;
+    my $agg = $c->model('Domain')->aggregate_name(%args);
     $agg->method();
     
     $c->model('Domain')->service_name->method_name();

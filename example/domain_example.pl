@@ -21,11 +21,11 @@ say "  domain: $domain";
 say '';
 
 say 'calling orderlist Aggregate.';
-my $o1 = $domain->orderlist;
+my $o1 = $domain->_orderlist;
 say "  o1: $o1";
-my $o2 = $domain->orderlist;
+my $o2 = $domain->_orderlist;
 say "  o2: $o2";
-my $o42 = $domain->orderlist_with(id => 42);
+my $o42 = $domain->orderlist(id => 42);
 say "  o42: $o42";
 say '';
 

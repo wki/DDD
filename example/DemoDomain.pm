@@ -3,45 +3,43 @@ use Moose;
 use Bread::Board::Declare;
 use namespace::autoclean;
 
+#---------[ attributes needed by services or aggregates
 has schema => (
-    is      => 'ro',
-    isa     => 'DBIx::Class::Schema',
+    is  => 'ro',
+    isa => 'DBIx::Class::Schema',
 );
 
 has root_dir => (
-    is      => 'ro',
-    isa     => 'Path::Class::Dir',
+    is  => 'ro',
+    isa => 'Path::Class::Dir',
 );
 
-# one more method for every aggregate
-has orderlist => (
+#---------[ Aggregates: private attribute and public method for param-handling
+has _orderlist => (
     is           => 'ro',
     isa          => 'My::Aggregate',
-    infer        => 1,
-    # dependencies => {
-    #     schema   => 'schema',
-    # }
+    dependencies => {
+        schema   => 'schema',
+    }
 );
 
-# one method for aggregates needing an extra ID
-sub orderlist_with {
+sub orderlist {
     my $self = shift;
     
     return $self->resolve(
-        service => 'orderlist', 
+        service    => '_orderlist', 
         parameters => { @_ },
     );
 }
 
-# similar for services, but singleton
+#---------[ Services: singleton attributes
 has file_service => (
     is           => 'ro',
     isa          => 'My::Service',
-    infer        => 1,
-    # dependencies => {
-    #     schema   => 'schema',
-    #     root_dir => 'root_dir',
-    # },
+    dependencies => {
+        schema   => 'schema',
+        root_dir => 'root_dir',
+    },
     lifecycle    => 'Singleton',
 );
 
