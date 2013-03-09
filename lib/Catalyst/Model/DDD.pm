@@ -25,8 +25,17 @@ Catalyst::Model::DDD
 
 =cut
 
-has class => (is => 'ro', isa => 'Str', required => 1);
-has schema_from_model => (is => 'ro', isa => 'Str', required => 1);
+has class => (
+    is       => 'ro', 
+    isa      => 'Str', 
+    required => 1,
+);
+
+has schema_from_model => (
+    is       => 'ro', 
+    isa      => 'Str', 
+    required => 1,
+);
 
 sub prepare_arguments {
     my ($self, $app, $arg) = @_;

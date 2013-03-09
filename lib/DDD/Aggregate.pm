@@ -4,7 +4,6 @@ use namespace::autoclean;
 
 extends 'DDD::Entity';
 
-
 =head1 NAME
 
 DDD::Aggregate - base class for an aggregate
