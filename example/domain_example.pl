@@ -47,11 +47,13 @@ __END__
 #### gedachte Benutzung von Aggregaten:
 
 # abrufen von DB, verändern, speichern
+# offiziell: repository, sparen wir uns
 my $orderlist = $domain->orderlist(id => 42)->load;
 $orderlist->mach_was;
 $orderlist->save; # might die
 
 # neu Erzeugen, speichern I
+# offiziell: factory, sparen wir uns
 my $new_order = $domain->orderlist(user => 'Joe', mail => 'joe@doe.de');
 $orderlist->mach_was;
 $orderlist->save; # might die
