@@ -41,3 +41,36 @@ say '';
 say 'about to finish.';
 
 exit;
+
+__END__
+
+#### gedachte Benutzung von Aggregaten:
+
+# abrufen von DB, verändern, speichern
+my $orderlist = $domain->orderlist(id => 42)->load;
+$orderlist->mach_was;
+$orderlist->save; # might die
+
+# neu Erzeugen, speichern I
+my $new_order = $domain->orderlist(user => 'Joe', mail => 'joe@doe.de');
+$orderlist->mach_was;
+$orderlist->save; # might die
+
+# neu Erzeugen, speichern II
+my $new_order = $domain->orderlist;
+$orderlist->mach_was;
+$orderlist->save; # might die
+
+
+#### gesachte Benutzung von Services:
+
+$domain->service->methode(42);
+
+
+### Spezial Fall Service "security"
+
+# set user (roles guessed via relation)
+$domain->security->user($user);
+$domain->security->user_can(...);
+... more methods
+

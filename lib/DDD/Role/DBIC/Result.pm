@@ -40,8 +40,10 @@ loads a record by its id
 
 sub load {
     my $self = shift;
+    my $id = shift
+        or die 'no ID provided for loading';
     
-    ...
+    
 }
 
 =head2 save
