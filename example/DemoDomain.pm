@@ -20,6 +20,7 @@ has _orderlist => (
     isa          => 'My::Aggregate',
     dependencies => {
         schema   => 'schema',
+        security => 'security',
     }
 );
 
@@ -37,11 +38,20 @@ has file_service => (
     is           => 'ro',
     isa          => 'My::Service',
     dependencies => {
-        schema   => 'schema',
         root_dir => 'root_dir',
     },
     lifecycle    => 'Singleton',
 );
+
+has security => (
+    is           => 'ro',
+    isa          => 'My::SecurityService',
+    dependencies => {
+        schema   => 'schema',
+    },
+    lifecycle    => 'Singleton',
+);
+
 
 __PACKAGE__->meta->make_immutable;
 1;

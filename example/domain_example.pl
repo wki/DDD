@@ -46,6 +46,7 @@ __END__
 
 #### gedachte Benutzung von Aggregaten:
 
+## Möglichkeit 1:
 # abrufen von DB, verändern, speichern
 # offiziell: repository, sparen wir uns
 my $orderlist = $domain->orderlist(id => 42)->load;
@@ -60,8 +61,19 @@ $orderlist->save; # might die
 
 # neu Erzeugen, speichern II
 my $new_order = $domain->orderlist;
-$orderlist->mach_was;
-$orderlist->save; # might die
+$new_order->mach_was;
+$new_order->save; # might die
+
+## Möglichkeit 2:
+# abrufen, verändern, speichern
+my $orderlist = $domain->orderlist->find(42);
+$orderlist->machwas;
+$orderlist->save;
+
+# neu erzeugen:
+my $new_order = $domain->orderlist->create(user => 'Joe', ...);
+$new_order->mach_was;
+$new_order->save; # might die
 
 
 #### gesachte Benutzung von Services:
@@ -73,6 +85,11 @@ $domain->service->methode(42);
 
 # set user (roles guessed via relation)
 $domain->security->user($user);
+
+# User wieder abfragen (DBIC-Row)
+my $user = $domain->security->user->id;
+
+# Fähigkeiten abfragen
 $domain->security->user_can(...);
-... more methods
+
 
