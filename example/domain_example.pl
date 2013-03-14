@@ -46,33 +46,15 @@ __END__
 
 #### gedachte Benutzung von Aggregaten:
 
-## Möglichkeit 1:
-# abrufen von DB, verändern, speichern
-# offiziell: repository, sparen wir uns
-my $orderlist = $domain->orderlist(id => 42)->load;
-$orderlist->mach_was;
-$orderlist->save; # might die
-
-# neu Erzeugen, speichern I
-# offiziell: factory, sparen wir uns
-my $new_order = $domain->orderlist(user => 'Joe', mail => 'joe@doe.de');
-$orderlist->mach_was;
-$orderlist->save; # might die
-
-# neu Erzeugen, speichern II
-my $new_order = $domain->orderlist;
-$new_order->mach_was;
-$new_order->save; # might die
-
-## Möglichkeit 2:
 # abrufen, verändern, speichern
-my $orderlist = $domain->orderlist->find(42);
-$orderlist->machwas;
-$orderlist->save;
+my $orderlist = $domain->orderlist(id => 42); # equivalent to below, lazy
+my $orderlist = $domain->orderlist->load(42); # equivalent to above, non-lazy
+$orderlist->do_something;
+$orderlist->save; # alternativ: ->undo
 
 # neu erzeugen:
-my $new_order = $domain->orderlist->create(user => 'Joe', ...);
-$new_order->mach_was;
+my $new_order = $domain->orderlist->init(user => 'Joe', ...);
+$new_order->do_something;
 $new_order->save; # might die
 
 

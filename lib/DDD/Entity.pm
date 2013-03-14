@@ -3,12 +3,23 @@ use Moose;
 use namespace::autoclean;
 
 extends 'DDD::Base';
+with 'DDD::Role::DBIC::Schema',
+     'DDD::Role::DBIC::Result';
 
 =head1 NAME
 
 DDD::Entity - base class for an entity
 
 =head1 SYNOPSIS
+
+    package My::Entity::Foo;
+    use Moose;
+    
+    extends 'DDD::Entity';
+    
+    sub resultset_name { 'FooBar' }
+    
+    1;
 
 =head1 DESCRIPTION
 
@@ -21,8 +32,10 @@ DDD::Entity - base class for an entity
 =cut
 
 has id => (
-    is => 'ro',
-    isa => 'Str',
+    is        => 'ro',
+    isa       => 'Str',
+    writer    => '_id',
+    predicate => 'has_id',
 );
 
 =head1 METHODS

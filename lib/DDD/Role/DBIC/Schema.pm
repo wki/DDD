@@ -20,8 +20,8 @@ DDD::Role::DBIC::Schema - add a schema attribute to your class
 =cut
 
 has schema => (
-    is => 'ro',
-    isa => 'DBIx::Class::Schema',
+    is       => 'ro',
+    isa      => 'DBIx::Class::Schema',
     required => 1,
 );
 
