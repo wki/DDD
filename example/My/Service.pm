@@ -5,17 +5,13 @@ use Path::Class;
 use namespace::autoclean;
 
 extends 'DDD::Service';
-with 'Role::Jabber';
+with 'Role::Jabber',
+     'DDD::Role::DBIC::Schema';
 
 has root_dir => (
     is => 'ro',
     isa => 'Path::Class::Dir',
     required => 1,
-);
-
-has schema => (
-    is  => 'ro',
-    isa => 'DBIx::Class::Schema',
 );
 
 sub list_files {

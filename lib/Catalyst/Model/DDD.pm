@@ -17,7 +17,9 @@ Catalyst::Model::DDD
     
     __PACKAGE__->config(
         class             => 'MyApp::Domain::Something',
-        schema_from_model => 'DB',
+        schema_from_model => 'DB',            # bad way
+        schema            => __model(DB)__,   # more readable
+        logger            => __logger__,
         args              => { optional => 'args' },
     );
     

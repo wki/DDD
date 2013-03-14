@@ -9,14 +9,20 @@ has schema => (
     isa => 'DBIx::Class::Schema',
 );
 
-has root_dir => (
+### better: Storage Infrastructure Reference
+has storage => (
     is  => 'ro',
-    isa => 'Path::Class::Dir',
+    isa => 'Infrastructure::Storage',
 );
 
-has logger => (
+has log => (
     is  => 'ro',
-    isa => 'Any', # ???
+    isa => 'Object', # ???
+);
+
+has user => (
+    is  => 'ro',
+    isa => 'Mabe[Object]',
 );
 
 #---------[ Aggregates: private attribute and public method for param-handling
@@ -26,7 +32,8 @@ has _orderlist => (
     dependencies => {
         schema   => 'schema',
         security => 'security',
-    }
+        log      => 'log',
+    },
 );
 
 sub orderlist {
@@ -43,7 +50,7 @@ has file_service => (
     is           => 'ro',
     isa          => 'My::Service',
     dependencies => {
-        root_dir => 'root_dir',
+        root_dir => 'storage_dir',
     },
     lifecycle    => 'Singleton',
 );

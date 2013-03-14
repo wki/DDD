@@ -19,6 +19,7 @@ DDD::Aggregate - base class for an aggregate
     # the resultset to read from, mandatory
     sub resultset_name { 'FooBar' }
     
+    # an optional part of the aggregate
     has children => (
         traits  => ['Array'],
         is      => 'rw',
