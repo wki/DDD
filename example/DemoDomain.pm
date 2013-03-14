@@ -1,72 +1,73 @@
 package DemoDomain;
-use Moose;
-use Bread::Board::Declare;
-use namespace::autoclean;
+use DDD::Domain;
 
-#---------[ attributes needed by services or aggregates
+#---------[ things needed by services or aggregates, set by constructor
 has schema => (
     is  => 'ro',
     isa => 'DBIx::Class::Schema',
-    ### TODO: must coerce from code-ref
 );
 
-### better: Storage Infrastructure Reference
 has storage => (
     is  => 'ro',
-    isa => 'Infrastructure::Storage',
-    ### TODO: must coerce from code-ref
+    isa => 'Object',
 );
 
 has log => (
     is  => 'ro',
     isa => 'Object', # ???
-    ### TODO: must coerce from code-ref
 );
 
 has user => (
     is  => 'ro',
     isa => 'Mabe[Object]',
-    ### TODO: must coerce from code-ref
 );
 
 #---------[ Aggregates: private attribute and public method for param-handling
-has _orderlist => (
-    is           => 'ro',
+
+aggregate orderlist => (
     isa          => 'My::Aggregate',
-    dependencies => {
-        schema   => 'schema',
-        security => 'security',
-        log      => 'log',
-    },
+    dependencies => [ qw(schema security log) ],
 );
 
-sub orderlist {
-    my $self = shift;
-    
-    return $self->resolve(
-        service    => '_orderlist', 
-        parameters => { @_ },
-    );
-}
+# has _orderlist => (
+#     is           => 'ro',
+#     isa          => 'My::Aggregate',
+#     dependencies => [ qw(schema security log) ],
+# );
+# 
+# sub orderlist {
+#     my $self = shift;
+#     
+#     return $self->resolve(
+#         service    => '_orderlist', 
+#         parameters => { @_ },
+#     );
+# }
 
-#---------[ Services: singleton attributes
-has file_service => (
-    is           => 'ro',
+#---------[ Services: singletons (in our case: per Request)
+
+service file_service => (
     isa          => 'My::Service',
-    dependencies => {
-        root_dir => 'storage_dir',
-    },
-    lifecycle    => 'Singleton',
+    dependencies => [ 'storage' ],
 );
 
-has security => (
-    is           => 'ro',
+# has file_service => (
+#     is           => 'ro',
+#     isa          => 'My::Service',
+#     dependencies => [ 'storage' ],
+#     lifecycle    => 'Singleton',
+# );
+
+service security => (
     isa          => 'My::SecurityService',
-    dependencies => {
-        schema   => 'schema',
-    },
-    lifecycle    => 'Singleton',
+    dependencies => [ 'schema' ],
 );
 
-__PACKAGE__->meta->make_immutable;
+# has security => (
+#     is           => 'ro',
+#     isa          => 'My::SecurityService',
+#     dependencies => [ 'schema' ],
+#     lifecycle    => 'Singleton',
+# );
+
 1;

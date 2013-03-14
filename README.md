@@ -17,19 +17,39 @@ MyApp::Domain::XxxService
 
 ## Catalyst Configuration ##
 
-'Model::Domain' => {
-    class => 'MyApp::Domain',
-    args  => {
-        schema  => sub { MyApp->model('DB') },
-        storage => sub { MyApp->model('FileStorage') },
-        log     => sub { MyApp->log },
-        is_live => MyApp->is_live,
+    'Model::Domain' => {
+        class => 'MyApp::Domain',
+        args  => {
+            schema  => MyApp->model('DB'),
+            storage => sub { MyApp->model('FileStorage') }, # if per request
+            log     => MyApp->log,
+            is_live => MyApp->is_live,
+        },
     },
-},
+    
+    'Model::FileStorage' => {
+        root_dir => __path_to(root/files)__,
+    },
 
-'Model::FileStorage' => {
-    storage_dir => __path_to(root/files)__,
-},
+
+## Domain Class ##
+
+The domain class is a Bread::Board container. Looks like this:
+
+    package MyApp::Domain;
+    use Moose;
+    use namespace::autoclean;
+    
+    extends 'DDD::Domain';
+    
+    # services that look like attributes set via construction
+    has log => ( ... );
+    
+    # aggregates, internally consist of a _xxx service and an xxx accessor
+    aggregate orderlist => ( ... );
+    
+    # services -- singleton lifecycle
+    service fileservice => ( ... );
 
 
 ## Usage inside Catalyst Controller ##
@@ -40,4 +60,10 @@ MyApp::Domain::XxxService
     $agg->save;
     
     $c->model('Domain')->service_name->method_name();
+
+
+## Infrastructure Layer -- more simple things ##
+
+    FileStorage     -- handle files inside dir(storage/files)
+    JobStorage      -- generate new Jobs
 
