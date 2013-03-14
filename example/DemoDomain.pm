@@ -14,6 +14,11 @@ has root_dir => (
     isa => 'Path::Class::Dir',
 );
 
+has logger => (
+    is  => 'ro',
+    isa => 'Any', # ???
+);
+
 #---------[ Aggregates: private attribute and public method for param-handling
 has _orderlist => (
     is           => 'ro',
@@ -51,7 +56,6 @@ has security => (
     },
     lifecycle    => 'Singleton',
 );
-
 
 __PACKAGE__->meta->make_immutable;
 1;
