@@ -5,18 +5,3 @@ TODO
     * Aggregate extends Entity
     * Aggregate has (root isa Entity)
 
-
-Erweiterung der Plugin::ConfigLoader Expansionen, damit das hier geht:
-    'Model::Domain' => {
-        class       => 'MyApp::Domain',
-        schema      => __model(DB)__,
-        storage     => __model(FileStorage)__
-        log         => __log__,
-        is_live     => __c(is_live)__,
-        user        => __c(user)__,
-    },
-
-    # more meaningful would be 'Infrastructure::Something' ...
-    'Model::FileStorage' => {
-        storage_dir => __path_to(root/files)__,
-    },

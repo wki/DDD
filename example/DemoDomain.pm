@@ -7,22 +7,26 @@ use namespace::autoclean;
 has schema => (
     is  => 'ro',
     isa => 'DBIx::Class::Schema',
+    ### TODO: must coerce from code-ref
 );
 
 ### better: Storage Infrastructure Reference
 has storage => (
     is  => 'ro',
     isa => 'Infrastructure::Storage',
+    ### TODO: must coerce from code-ref
 );
 
 has log => (
     is  => 'ro',
     isa => 'Object', # ???
+    ### TODO: must coerce from code-ref
 );
 
 has user => (
     is  => 'ro',
     isa => 'Mabe[Object]',
+    ### TODO: must coerce from code-ref
 );
 
 #---------[ Aggregates: private attribute and public method for param-handling
