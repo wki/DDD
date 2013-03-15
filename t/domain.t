@@ -10,6 +10,7 @@ use ok 'DDD::Service';
     # --------------------------------- our "Infrastructure"
     package My::Schema;
     use Moose;
+    # do we need a DBIC-Mock?
     
     package My::Storage;
     use Moose;
@@ -19,12 +20,13 @@ use ok 'DDD::Service';
     use Moose;
     extends 'DDD::Aggregate';
     has schema => (is => 'ro', isa => 'Object');
+    has foo    => (is => 'ro', isa => 'Str', predicate => 'has_foo');
     
     package My::Domain::DoIt;
     use Moose;
     extends 'DDD::Service';
-    has schema => (is => 'ro', isa => 'Object');
-    has do_it  => (is => 'ro', isa => 'Object');
+    has schema  => (is => 'ro', isa => 'Object');
+    has storage => (is => 'ro', isa => 'Object');
     
     package My::Domain;
     use DDD::Domain;
@@ -36,7 +38,7 @@ use ok 'DDD::Service';
         dependencies => [ 'schema', 'storage' ],
     );
 
-    aggregate orderlist => (
+    aggregate thing => (
         isa          => '+My::Domain::Thing',
         dependencies => [ 'schema' ],
     );
@@ -49,6 +51,15 @@ my $domain  = My::Domain->new(schema => $schema, storage => $storage);
 is $domain->schema,  $schema,  'schema can get retrieved';
 is $domain->storage, $storage, 'storage can get retrieved';
 
-my $do_it = $schema->do_it
+isa_ok $domain->do_it, 'My::Domain::DoIt';
+is $domain->do_it, $domain->do_it, 'do_it service always returns the same object';
+is $domain->do_it->schema,  $schema,  'do_it knows schema';
+is $domain->do_it->storage, $storage, 'do_it knows storage';
+
+isa_ok $domain->thing, 'My::Domain::Thing';
+isnt $domain->thing, $domain->thing, 'aggregate always returns a new object';
+ok !$domain->thing->has_foo, 'missing foo attribute is missing in thing';
+ok $domain->thing(foo => 42)->has_foo, 'given foo attribute is present in thing';
+is $domain->thing(foo => 42)->foo, 42, 'given foo attribute is correct in thing';
 
 done_testing;
