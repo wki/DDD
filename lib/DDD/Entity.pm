@@ -2,9 +2,12 @@ package DDD::Entity;
 use Moose;
 use namespace::autoclean;
 
+sub id; # implemented below
+sub resultset_name { die 'no resultset defined' };
+
 extends 'DDD::Base';
-with 'DDD::Role::DBIC::Schema',
-     'DDD::Role::DBIC::Result';
+with 'DDD::Role::DBIC::Schema';
+with 'DDD::Role::DBIC::Result';
 
 =head1 NAME
 

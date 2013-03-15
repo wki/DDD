@@ -19,7 +19,7 @@ has log => (
 
 has user => (
     is  => 'ro',
-    isa => 'Mabe[Object]',
+    isa => 'Maybe[Object]',
 );
 
 #---------[ Aggregates: private attribute and public method for param-handling
@@ -29,6 +29,8 @@ aggregate orderlist => (
     dependencies => [ qw(schema security log) ],
 );
 
+### will produce:
+#
 # has _orderlist => (
 #     is           => 'ro',
 #     isa          => 'My::Aggregate',
@@ -51,6 +53,8 @@ service file_service => (
     dependencies => [ 'storage' ],
 );
 
+### will produce:
+#
 # has file_service => (
 #     is           => 'ro',
 #     isa          => 'My::Service',
@@ -63,6 +67,8 @@ service security => (
     dependencies => [ 'schema' ],
 );
 
+### will produce:
+#
 # has security => (
 #     is           => 'ro',
 #     isa          => 'My::SecurityService',

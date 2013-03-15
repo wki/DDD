@@ -29,31 +29,6 @@ Catalyst::Model::DDD - Base class for domain models
 
 =cut
 
-# has class => (
-#     is       => 'ro',
-#     isa      => 'Str',
-#     required => 1,
-# );
-# 
-# has args => (
-#     is      => 'rw',
-#     isa     => 'HashRef',
-#     default => sub { +{} },
-# );
-# 
-# sub prepare_arguments {
-#     my ($self, $app, $arg) = @_;
-# 
-#     return {
-#         (
-#             # deref code-refs, keep everything else
-#             map { ref $_ eq 'CODE' ? $_->() : $_ }
-#             %{$self->args}
-#         ),
-#         %$arg,
-#     };
-# }
-
 sub mangle_arguments {
     my ($self, $args) = @_;
     

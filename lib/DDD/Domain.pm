@@ -2,8 +2,7 @@ package DDD::Domain;
 use Moose ();
 use Moose::Exporter;
 use Sub::Install;
-
-extends 'Bread::Board::Declare';
+use Bread::Board::Declare ();
 
 Moose::Exporter->setup_import_methods(
     with_meta => ['aggregate', 'service'],
@@ -11,18 +10,24 @@ Moose::Exporter->setup_import_methods(
 );
 
 sub aggregate {
-    my ($meta, $name, @args) = @_;
+    my ($meta, $name, %args) = @_;
 
-    my $package = caller;
+    # this method is curried (!)
+    my $package = caller(1);
+
+    _resolve_isa_classes($package, \%args);
     
     # _name attribute as a service
-    Moose::has($meta, "_$name", is => 'ro', @args);
+    Moose::has($meta, "_$name", is => 'ro', %args);
 
     # name method as accessor
+    warn "install '$name' into '$package'";
     Sub::Install::install_sub({
         code => sub {
             my $self = shift;
             
+            ### FIXME: resolve does not transport params -- why???
+            warn 'PARAMETERS: ' . join('/', @_);
             return $self->resolve(
                 service    => "_$name",
                 parameters => { @_ },
@@ -34,11 +39,23 @@ sub aggregate {
 }
 
 sub service {
-    my ($meta, $name, @args) = @_;
+    my ($meta, $name, %args) = @_;
+    
+    # this method is curried (!)
+    my $package = caller(1);
+
+    _resolve_isa_classes($package, \%args);
     
     # name attribute as a service
-    Moose::has($meta, $name, is => 'ro', lifecycle => 'Singleton', @args);
+    Moose::has($meta, $name, is => 'ro', lifecycle => 'Singleton', %args);
 }
 
-__PACKAGE__->meta->make_immutable;
+sub _resolve_isa_classes {
+    my ($package, $args) = @_;
+    
+    return if !exists $args->{isa};
+    $args->{isa} =~ s{\A [+]}{}xms and return;
+    $args->{isa} = "$package\::$args->{isa}";
+}
+
 1;

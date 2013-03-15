@@ -2,7 +2,7 @@ package DDD::Role::DBIC::Result;
 use Moose::Role;
 use Carp;
 
-requries qw(schema resultset_name id);
+requires qw(schema resultset_name id);
 
 =head1 NAME
 
@@ -135,5 +135,4 @@ it under the same terms as Perl itself.
 
 =cut
 
-__PACKAGE__->meta->make_immutable;
 1;

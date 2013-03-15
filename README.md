@@ -20,7 +20,7 @@ MyApp::Domain::XxxService
     'Model::Domain' => {
         class => 'MyApp::Domain',
         args  => {
-            schema  => MyApp->model('DB'),
+            schema  => sub { MyApp->model('DB')->schema },  # if per request
             storage => sub { MyApp->model('FileStorage') }, # if per request
             log     => MyApp->log,
             is_live => MyApp->is_live,
