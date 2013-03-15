@@ -1,13 +1,29 @@
 package DDD::Domain;
+use 5.010;
 use Moose ();
 use Moose::Exporter;
 use Sub::Install;
 use Bread::Board::Declare ();
+use Bread::Board::ConstructorInjection (); # be save it is loaded.
 
 Moose::Exporter->setup_import_methods(
     with_meta => ['aggregate', 'service'],
     also      => ['Moose', 'Bread::Board::Declare'],
 );
+
+# patch Bread Board. See https://rt.cpan.org/Ticket/Display.html?id=83962
+{
+    package Bread::Board::ConstructorInjection;
+    
+    no warnings 'redefine';
+    
+    sub get {
+        my $self = shift;
+        
+        my $constructor = $self->constructor_name;
+        $self->class->$constructor( %{ $self->params }, @_ );
+    }
+}
 
 sub aggregate {
     my ($meta, $name, %args) = @_;
@@ -21,13 +37,10 @@ sub aggregate {
     Moose::has($meta, "_$name", is => 'ro', %args);
 
     # name method as accessor
-    warn "install '$name' into '$package'";
     Sub::Install::install_sub({
         code => sub {
             my $self = shift;
             
-            ### FIXME: resolve does not transport params -- why???
-            warn 'PARAMETERS: ' . join('/', @_);
             return $self->resolve(
                 service    => "_$name",
                 parameters => { @_ },
