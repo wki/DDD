@@ -73,7 +73,7 @@ sub load {
     $self->_id(shift) if @_;
     croak 'no ID provided for loading' if !$self->has_id;
     
-    my $lazily_built_row = $self->row;
+    my $row_built_by_lazy_builder = $self->row;
     
     return $self;
 }

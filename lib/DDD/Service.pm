@@ -16,8 +16,6 @@ DDD::Entity - base class for a service
 
 =cut
 
-
-
 =head1 AUTHOR
 
 Wolfgang Kinkeldei
