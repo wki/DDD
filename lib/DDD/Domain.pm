@@ -1,5 +1,4 @@
 package DDD::Domain;
-use 5.010;
 use Moose ();
 use Moose::Exporter;
 use Sub::Install;

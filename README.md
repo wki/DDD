@@ -45,11 +45,11 @@ The domain class is a Bread::Board container. Looks like this:
     # services that look like attributes set via construction
     has log => ( ... );
     
-    # aggregates, internally consist of a _xxx service and an xxx accessor
-    aggregate orderlist => ( ... );
-    
     # services -- singleton lifecycle
     service fileservice => ( ... );
+    
+    # aggregates, internally consist of a _xxx service and an xxx accessor
+    aggregate orderlist => ( ... );
 
 
 ## Usage inside Catalyst Controller ##
