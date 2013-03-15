@@ -22,30 +22,6 @@ has user => (
     isa => 'Maybe[Object]',
 );
 
-#---------[ Aggregates: private attribute and public method for param-handling
-
-aggregate orderlist => (
-    isa          => 'My::Aggregate',
-    dependencies => [ qw(schema security log) ],
-);
-
-### will produce:
-#
-# has _orderlist => (
-#     is           => 'ro',
-#     isa          => 'My::Aggregate',
-#     dependencies => [ qw(schema security log) ],
-# );
-# 
-# sub orderlist {
-#     my $self = shift;
-#     
-#     return $self->resolve(
-#         service    => '_orderlist', 
-#         parameters => { @_ },
-#     );
-# }
-
 #---------[ Services: singletons (in our case: per Request)
 
 service file_service => (
@@ -75,5 +51,29 @@ service security => (
 #     dependencies => [ 'schema' ],
 #     lifecycle    => 'Singleton',
 # );
+
+#---------[ Aggregates: private attribute and public method for param-handling
+
+aggregate orderlist => (
+    isa          => 'My::Aggregate',
+    dependencies => [ qw(schema security log) ],
+);
+
+### will produce:
+#
+# has _orderlist => (
+#     is           => 'ro',
+#     isa          => 'My::Aggregate',
+#     dependencies => [ qw(schema security log) ],
+# );
+# 
+# sub orderlist {
+#     my $self = shift;
+#     
+#     return $self->resolve(
+#         service    => '_orderlist', 
+#         parameters => { @_ },
+#     );
+# }
 
 1;
