@@ -27,6 +27,9 @@ DDD - base classes for DDD models
     aggregate orderlist => (
         isa          => '+My::Orderlist', # no prefix inserted
         dependencies => [ 'schema', 'log' ],
+        parameters   => {
+            foo => { isa => 'Int', optional => 1 },
+        },
     );
     
     1;

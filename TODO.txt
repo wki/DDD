@@ -5,3 +5,12 @@ TODO
     * Aggregate extends Entity
     * Aggregate has (root isa Entity)
 
+
+Einführen von Specifications
+    * is_satisfied($obj): Bool
+
+Idee: kann man eine Specification so erstellen, daß sie sowohl eine Bedingung
+      testet, als auch die Bedingung DBIC-tauglich zurück liefert?
+      --> "me." ==> Aufruf von methoden auf $obj.
+      --> Alternativ: Query auslösen
+

@@ -41,6 +41,9 @@ use ok 'DDD::Service';
     aggregate thing => (
         isa          => '+My::Domain::Thing',
         dependencies => [ 'schema' ],
+        parameters   => {
+            foo => { isa => 'Int', optional => 1 },
+        },
     );
 }
 
