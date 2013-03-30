@@ -2,8 +2,9 @@ package DDD::Entity;
 use Moose;
 use namespace::autoclean;
 
-sub id; # implemented below
-sub resultset_name { die 'no resultset defined' };
+sub id; # implemented below, forward defined to satisfy with '...Result'
+sub _resultset_name { die 'no resultset defined' };
+sub _handles { ':all' };
 
 extends 'DDD::Base';
 with 'DDD::Role::DBIC::Schema';
@@ -20,7 +21,15 @@ DDD::Entity - base class for an entity
     
     extends 'DDD::Entity';
     
-    sub resultset_name { 'FooBar' }
+    # specify the resultset to fetch Records from
+    sub _resultset_name { 'FooBar' }
+    
+    # auto-define methods inside the Entity class to access Result methods
+    # just like 'handles' directive in attribute definitions
+    #
+    # allowed keywords:
+    # :primary, :columns, :methods, :all, name, -not_name
+    sub _handles { ':all' }
     
     1;
 

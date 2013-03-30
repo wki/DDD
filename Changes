@@ -1,4 +1,10 @@
 This file documents the revision history for Perl extension DDD
 
+0.02  2013-03-30
+        - added dependencies
+        - made '_resultset_name' a private class method
+        - a '_handles' class method automatically creates methods for
+          accessing a row's methods for Entity and Aggregate classes.
+
 0.01  2013-02-28
         - initial revision, just a fragment

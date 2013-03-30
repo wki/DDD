@@ -38,6 +38,17 @@ say "  f2: $f2";
 $domain->file_service->list_files;
 say '';
 
+
+# factory Benutzung:
+
+my $o = $domain->create('My::Entity', $whatever);
+
+
+
+
+
+
+
 say 'about to finish.';
 
 exit;

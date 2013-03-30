@@ -1,9 +1,9 @@
 TODO
 ----
 
-Überlegen was besser ist (gefühlsmäßig "has")
-    * Aggregate extends Entity
-    * Aggregate has (root isa Entity)
+Alles hat eine Relation zur Domain
+
+Factories zum Erzeugen von xxx
 
 
 Einführen von Specifications
@@ -14,3 +14,23 @@ Idee: kann man eine Specification so erstellen, daß sie sowohl eine Bedingung
       --> "me." ==> Aufruf von methoden auf $obj.
       --> Alternativ: Query auslösen
 
+
+--- Beispiel Entity
+
+package Entity::Xxx;
+use Moose;
+extends 'DDD::Entity';
+
+sub _resultset_name {
+    'orderlist' 
+}
+sub _handles {
+    qw(
+        :all
+        :columns
+        :primary
+        :relations
+        name_of_method
+        -name_of_method_to_ignore
+    )
+}

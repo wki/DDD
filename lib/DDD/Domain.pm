@@ -10,6 +10,7 @@ Moose::Exporter->setup_import_methods(
     also      => ['Moose', 'Bread::Board::Declare'],
 );
 
+# exported sub
 sub aggregate {
     my ($meta, $name, %args) = @_;
 
@@ -28,7 +29,10 @@ sub aggregate {
             
             return $self->resolve(
                 service    => "_$name",
-                parameters => { @_ },
+                parameters => {
+                    domain => $self,
+                    @_
+                },
             );
         },
         into => $package,

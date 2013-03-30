@@ -2,11 +2,11 @@ package DDD::Role::DBIC::Result;
 use Moose::Role;
 use Carp;
 
-requires qw(schema resultset_name id);
+requires qw(schema _resultset_name _handles id);
 
 =head1 NAME
 
-DDD::Role::Schema
+DDD::Role::DBIC::Result -- do magic with DBIC Result Objects
 
 =head1 SYNOPSIS
 
@@ -14,9 +14,68 @@ DDD::Role::Schema
 
 =head1 DESCRIPTION
 
+no need to use this role directly -- Entity and Aggragate use this role
+
 =head1 ATTRIBUTES
 
 =cut
+
+sub BUILD {
+    my $self = shift;
+    
+    ### TODO: create methods for accessing row-methods based on _handles
+    #
+    # :primary -> all primary keys
+    # :columns -> all column names
+    # :relations -> all relation names
+    # :methods -> all extra defined method names
+    # :all -> everything above
+    # name -> a method name
+    # -name -> not a method name
+    
+    my $meta = $self->meta;
+    my $is_initialized = $meta->has_method('__is_initialized__')
+        and return;
+
+    my %methods;
+    my $result_source = $self->resultset->result_source;
+    my %is_primary = map { ($_ => 1)} $result_source->primary_columns;
+
+    foreach my $handle_keyword ($self->_handles) {
+        if ($handle_keyword =~ m{\A (?: :primary | :all) \z}xms) {
+            $methods{$_} = 1
+                for keys %is_primary;
+        } elsif ($handle_keyword =~ m{\A (?: :columns | :all) \z}xms) {
+            $methods{$_} = 1
+                for grep { !$is_primary{$_} } $result_source->columns;
+        } elsif ($handle_keyword =~ m{\A (?: :relations | :all) \z}xms) {
+            $methods{$_} = 1
+                for $result_source->relationships;
+        } elsif ($handle_keyword =~ m{\A (?: :methods | :all) \z}xms) {
+            # TODO: how to find out the methods?
+        } elsif ($handle_keyword =~ s{\A -}{}xms) {
+            delete $methods{$handle_keyword};
+        } else {
+            $methods{$handle_keyword} = 1;
+        }
+    }
+
+    my $is_immutable = $meta->is_immutable;
+    
+    $self->meta->make_mutable if $is_immutable;
+    
+    foreach my $method (keys %methods) {
+        $self->meta->add_method(
+            $method => sub { 
+                my $self = shift;
+                $self->row->$method(@_);
+            }
+        )
+    }
+    
+    $self->meta->add_method(__is_initialized__ => sub { });
+    $self->meta->make_immutable if $is_immutable;
+}
 
 =head2 resultset
 
@@ -34,7 +93,7 @@ has resultset => (
 sub _build_resultset {
     my $self = shift;
     
-    return $self->schema->resultset($self->resultset_name);
+    return $self->schema->resultset($self->_resultset_name);
 }
 
 =head2 row
@@ -45,7 +104,6 @@ has row => (
     is         => 'rw',
     isa        => 'DBIx::Class::Row',
     lazy_build => 1,
-    ### TODO: how to add a handles...
 );
 
 sub _build_row {
@@ -73,6 +131,7 @@ sub load {
     $self->_id(shift) if @_;
     croak 'no ID provided for loading' if !$self->has_id;
     
+    # force lazy loading
     my $row_built_by_lazy_builder = $self->row;
     
     return $self;

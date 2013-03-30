@@ -40,4 +40,11 @@ aggregate orderlist => (
     dependencies => [ qw(schema security log) ],
 );
 
+# can we define Entities and Values or a factory somehow?
+# reason: easy creation of them must be possible
+
+factory create => (
+    isa => 'My::Factory',
+);
+
 1;
