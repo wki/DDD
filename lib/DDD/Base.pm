@@ -10,7 +10,18 @@ DDD::Base - base class for DDD
 
 =head1 DESCRIPTION
 
-=head METHODS
+=head1 ATTRIBUTES
+
+=cut
+
+# does not work -- Bread::Board service needed.
+# has domain => (
+#     is       => 'ro',
+#     isa      => 'Object', ### FIXME: or some Bread::Board... stuff ?
+#     required => 1,
+# );
+
+=head1 METHODS
 
 =cut
 

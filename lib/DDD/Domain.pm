@@ -10,6 +10,7 @@ Moose::Exporter->setup_import_methods(
     also      => ['Moose', 'Bread::Board::Declare'],
 );
 
+
 # exported sub
 sub aggregate {
     my ($meta, $name, %args) = @_;
@@ -18,7 +19,7 @@ sub aggregate {
     my $package = caller(1);
 
     _resolve_isa_classes($package, \%args);
-    
+
     # _name attribute as a service
     Moose::has($meta, "_$name", is => 'ro', %args);
 
@@ -26,11 +27,10 @@ sub aggregate {
     Sub::Install::install_sub({
         code => sub {
             my $self = shift;
-            
+
             return $self->resolve(
                 service    => "_$name",
                 parameters => {
-                    domain => $self,
                     @_
                 },
             );
@@ -42,22 +42,23 @@ sub aggregate {
 
 sub service {
     my ($meta, $name, %args) = @_;
-    
+
     # this method is curried (!)
     my $package = caller(1);
 
     _resolve_isa_classes($package, \%args);
-    
+
     # name attribute as a service
     Moose::has($meta, $name, is => 'ro', lifecycle => 'Singleton', %args);
 }
 
 sub _resolve_isa_classes {
     my ($package, $args) = @_;
-    
+
     return if !exists $args->{isa};
     $args->{isa} =~ s{\A [+]}{}xms and return;
     $args->{isa} = "$package\::$args->{isa}";
 }
+
 
 1;
