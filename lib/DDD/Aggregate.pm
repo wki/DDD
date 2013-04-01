@@ -4,6 +4,7 @@ use Try::Tiny;
 use namespace::autoclean;
 
 extends 'DDD::Entity';
+with 'DDD::Role::Domain';
 
 =head1 NAME
 

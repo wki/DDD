@@ -10,6 +10,17 @@ Moose::Exporter->setup_import_methods(
     also      => ['Moose', 'Bread::Board::Declare'],
 );
 
+sub init_meta {
+    my $package = shift;
+    my %args    = @_;
+    
+    Moose->init_meta(%args);
+    
+    my $meta = $args{for_class}->meta;
+    $meta->superclasses('DDD::Domain::Super');
+    
+    return $meta;
+}
 
 # exported sub
 sub aggregate {
@@ -20,7 +31,8 @@ sub aggregate {
 
     _resolve_isa_classes($package, \%args);
 
-    # _name attribute as a service
+    # _name attribute as a service with extra domain dependency
+    push @{$args{dependencies}}, 'domain';
     Moose::has($meta, "_$name", is => 'ro', %args);
 
     # name method as accessor
@@ -49,6 +61,7 @@ sub service {
     _resolve_isa_classes($package, \%args);
 
     # name attribute as a service
+    push @{$args{dependencies}}, 'domain';
     Moose::has($meta, $name, is => 'ro', lifecycle => 'Singleton', %args);
 }
 
@@ -60,5 +73,13 @@ sub _resolve_isa_classes {
     $args->{isa} = "$package\::$args->{isa}";
 }
 
+package DDD::Domain::Super;
+use Moose;
+use Bread::Board::Declare;
+
+has domain => (
+    is    => 'ro',
+    block => sub { $_[1] },
+);
 
 1;

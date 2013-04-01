@@ -1,5 +1,11 @@
 This file documents the revision history for Perl extension DDD
 
+0.03  2013-04-01
+        - changed superclass for Domain classes to DDD::Domain::Super
+          in order to allow reasonable defaults to be defined in one place
+        - added a 'domain' attribute to a domain allowing a dependency to it
+        - automatically depend on domain for services and aggregates
+
 0.02  2013-03-30
         - added dependencies
         - made '_resultset_name' a private class method

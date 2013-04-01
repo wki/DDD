@@ -3,6 +3,7 @@ use Moose;
 use namespace::autoclean;
 
 extends 'DDD::Base';
+with 'DDD::Role::Domain';
 
 =head1 NAME
 

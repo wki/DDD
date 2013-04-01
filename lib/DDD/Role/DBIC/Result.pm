@@ -34,8 +34,8 @@ sub BUILD {
     # -name -> not a method name
     
     my $meta = $self->meta;
-    my $is_initialized = $meta->has_method('__is_initialized__')
-        and return;
+    return if $meta->has_method('__is_initialized__');
+    warn "NOT INITIALIZED";
 
     my %methods;
     my $result_source = $self->resultset->result_source;
