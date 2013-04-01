@@ -118,7 +118,7 @@ sub _build_row {
 
 =cut
 
-=head2 load ( [$id] )
+=head2 load ( [$id | $row_object] )
 
 loads a record by its ID. The ID may be provided either to the load() method
 or given as a construction argument in the class.
@@ -128,7 +128,14 @@ or given as a construction argument in the class.
 sub load {
     my $self = shift;
     
-    $self->_id(shift) if @_;
+    my $id_or_row = shift;
+    if (ref $id_or_row) {
+        $self->row($id_or_row);
+        $self->_id($self->row->id);
+    } elsif (defined $id_or_row) {
+        $self->_id($id_or_row);
+    }
+    
     croak 'no ID provided for loading' if !$self->has_id;
     
     # force lazy loading

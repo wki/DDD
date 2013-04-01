@@ -1,10 +1,13 @@
 TODO
 ----
 
-Alles hat eine Relation zur Domain
+Intelligenter Umgang mit Aggregates/Entities
+ - $domain->aggregate_name(42)          --> entspricht ->load(42)
+ - $domain->aggregate_name($row_object) --> übernimmt row, setzt id, load_callbacks
+ - $domain->aggregate_name({...})       --> übernimmt alles angegebene
+ - $domain->aggregate_name(a => 42)     --> übernimmt alles angegebene
 
 Factories zum Erzeugen von xxx
-
 
 Einführen von Specifications
     * is_satisfied($obj): Bool

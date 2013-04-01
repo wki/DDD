@@ -65,10 +65,17 @@ is $domain->do_it->storage, $storage, 'do_it knows storage';
 
 isa_ok $domain->thing, 'Some::Domain::Thing';
 isnt $domain->thing, $domain->thing, 'aggregate always returns a new object';
-### TODO: check ->domain
-ok !$domain->thing->has_foo, 'missing foo attribute is missing in thing';
 is $domain->thing->domain, $domain, 'domain is present in thing';
+ok !$domain->thing->has_foo, 'missing foo attribute is missing in thing';
 ok $domain->thing(foo => 42)->has_foo, 'given foo attribute is present in thing';
 is $domain->thing(foo => 42)->foo, 42, 'given foo attribute is correct in thing';
+
+TODO: {
+    todo_skip 'more constructor things in planning', 2;
+    
+    is $domain->thing(id => 42)->id, 42, 'given id attribute is correct in thing';
+    is $domain->thing(42)->id, 42,       'a scalar value is used as ID';
+};
+
 
 done_testing;
