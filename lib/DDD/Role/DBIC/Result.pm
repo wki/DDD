@@ -35,7 +35,6 @@ sub BUILD {
     
     my $meta = $self->meta;
     return if $meta->has_method('__is_initialized__');
-    warn "NOT INITIALIZED";
 
     my %methods;
     my $result_source = $self->resultset->result_source;
@@ -185,6 +184,7 @@ undo latest changes and revert to saved record. Dies if no record is saved.
 sub undo {
     my $self = shift;
     
+    $self->clear_row;
     $self->load;
     
     return $self;

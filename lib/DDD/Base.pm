@@ -14,13 +14,6 @@ DDD::Base - base class for DDD
 
 =cut
 
-# does not work -- Bread::Board service needed.
-# has domain => (
-#     is       => 'ro',
-#     isa      => 'Object', ### FIXME: or some Bread::Board... stuff ?
-#     required => 1,
-# );
-
 =head1 METHODS
 
 =cut

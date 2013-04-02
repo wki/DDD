@@ -31,8 +31,11 @@ sub aggregate {
 
     _resolve_isa_classes($package, \%args);
 
-    # _name attribute as a service with extra domain dependency
+    # _name attribute as a service
+    #   with extra domain dependency and optional id and row parameters
     push @{$args{dependencies}}, 'domain';
+    $args{parameters}->{id}  = { isa => 'Str', optional => 1 };
+    $args{parameters}->{row} = { isa => 'DBIx::Class::Row', optional => 1 };
     Moose::has($meta, "_$name", is => 'ro', %args);
 
     # name method as accessor
@@ -42,9 +45,9 @@ sub aggregate {
 
             return $self->resolve(
                 service    => "_$name",
-                parameters => {
-                    @_
-                },
+                parameters => ref $_[0] eq 'HASH'
+                    ? $_[0]
+                    : { @_ },
             );
         },
         into => $package,
