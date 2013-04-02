@@ -20,10 +20,10 @@ MyApp::Domain::XxxService
     'Model::Domain' => {
         class => 'MyApp::Domain',
         args  => {
-            schema  => sub { MyApp->model('DB')->schema },  # if per request
-            storage => sub { MyApp->model('FileStorage') }, # if per request
-            log     => MyApp->log,
-            is_live => MyApp->is_live,
+            schema      => sub { MyApp->model('DB')->schema },
+            storage     => sub { MyApp->model('FileStorage') },
+            log         => sub { MyApp->log },
+            environment => sub { MyApp->environment },
         },
     },
     
@@ -48,18 +48,29 @@ The domain class is a Bread::Board container. Looks like this:
     # services -- singleton lifecycle
     service fileservice => ( ... );
     
+    # TODO: factory -- does this make sense? (implementation: same as service)
+    factory order_builder => ( ... );
+    
     # aggregates, internally consist of a _xxx service and an xxx accessor
     aggregate orderlist => ( ... );
 
 
 ## Usage inside Catalyst Controller ##
 
+    # Example 1: initialize an aggregate and later load it
     my $agg = $c->model('Domain')->aggregate_name(%args);
     $agg->load($optional_id);
     $agg->method();
     $agg->save;
     
+    # Example 2: initialize an aggregate with all we know
+    my $agg = $c->model('Domain')->agg_name(id => $id, row => $row_obj);
+    
+    # Use a service by calling a method on it
     $c->model('Domain')->service_name->method_name();
+    
+    # Idea for a factory usage
+    $c->model('Domain')->order_builder->build(...);
 
 
 ## Infrastructure Layer -- more simple things ##
