@@ -2,7 +2,15 @@
 
 base classes for a simple Domain-Driven-Design Layer
 
-Goal is avoid logic in controllers and to keep the DBIC layer simple.
+Goals:
+
+* avoid logic in controllers
+
+* keep the DBIC layer simple
+
+* allow accessing misc infrastructure layers
+
+* access current user or running environment
 
 
 ## Class Layout ##
@@ -69,8 +77,15 @@ The domain class is a Bread::Board container. Looks like this:
     # Use a service by calling a method on it
     $c->model('Domain')->service_name->method_name();
     
-    # Idea for a factory usage
+    # Idea for a factory
+    #  -- possible Problem: duplicated logic for validity-check
+    #                       duplicated code for additional attributes
     $c->model('Domain')->order_builder->build(...);
+    
+    # Idea for a repository
+    #  -- possible Problem: duplicated logic for validity-check
+    #                       duplicated code for additional attributes
+    $c->model('Domain')->order_repository->order_by_id(...);
 
 
 ## Infrastructure Layer -- more simple things ##

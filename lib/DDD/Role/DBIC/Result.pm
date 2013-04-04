@@ -40,7 +40,7 @@ sub BUILD {
     my $result_source = $self->resultset->result_source;
     my %is_primary = map { ($_ => 1)} $result_source->primary_columns;
 
-    foreach my $handle_keyword ($self->_handles) {
+    foreach my $handle_keyword (grep { $_ } map { ref $_ eq 'ARRAY' ? @$_ : $_ } $self->_handles) {
         if ($handle_keyword =~ m{\A (?: :primary | :all) \z}xms) {
             $methods{$_} = 1
                 for keys %is_primary;
@@ -63,7 +63,7 @@ sub BUILD {
     
     $self->meta->make_mutable if $is_immutable;
     
-    foreach my $method (keys %methods) {
+    foreach my $method (grep {$_} keys %methods) {
         $self->meta->add_method(
             $method => sub { 
                 my $self = shift;
