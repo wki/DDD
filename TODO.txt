@@ -17,6 +17,9 @@ Idee: kann man eine Specification so erstellen, daß sie sowohl eine Bedingung
       --> "me." ==> Aufruf von methoden auf $obj.
       --> Alternativ: Query auslösen
 
+Notifications innerhalb DDD
+ - notifier als Klasse innerhalb der Domain definieren
+   service notifier => ( ... );
 
 --- Beispiel Entity
 
