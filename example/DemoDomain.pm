@@ -12,8 +12,7 @@ has storage => (
     isa => 'Object',
 );
 
-has 
-log => (
+has log => (
     is  => 'ro',
     isa => 'Object',
 );
