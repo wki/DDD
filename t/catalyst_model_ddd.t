@@ -4,9 +4,11 @@ use Test::More;
 
 use ok 'Catalyst::Model::DDD';
 
+my $c = 'c';
+
 my $ddd = Catalyst::Model::DDD->new;
 is_deeply
-    $ddd->mangle_arguments( { a => 42, b => sub { 13 } } ),
+    $ddd->prepare_arguments( $c, { a => 42, b => sub { 13 } } ),
     { a => 42, b => 13 },
     'mangle_arguments executes coderef hash values';
 

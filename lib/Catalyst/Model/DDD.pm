@@ -18,10 +18,10 @@ Catalyst::Model::DDD - Base class for domain models
     __PACKAGE__->config(
         class => 'MyApp::Domain',
         args  => { 
-            log     => MyApp->log,                  # always the same
-            schema  => sub { MyApp->model('DB') },  # maybe per request?
-            storage => MyApp->model('FileStorage'), # always the same
-            is_live => MyApp->is_live,              # must be class method
+            log     => sub { shift->log },
+            schema  => sub { shift->model('DB') },
+            storage => sub { shift->model('FileStorage') },
+            is_live => sub { shift->is_live },
         },
     );
     
@@ -29,13 +29,17 @@ Catalyst::Model::DDD - Base class for domain models
 
 =cut
 
-sub mangle_arguments {
-    my ($self, $args) = @_;
+sub prepare_arguments {
+    my ($self, $c, $arg) = @_;
+    
+    my %args = exists $self->{args}
+        ? (%{$self->{args}}, %$arg )
+        : %$arg;
     
     return {
         # deref code-refs, keep everything else
-        map { ref $_ eq 'CODE' ? $_->() : $_ }
-        %$args
+        map { ref $_ eq 'CODE' ? $_->($c) : $_ }
+        %args
     };
 }
 
