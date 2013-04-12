@@ -52,29 +52,29 @@ sub _run_attribute_hooks {
     }
 }
 
-before save => sub {
-    my $self = shift;
-    
-    $self->must_satisfy;
-};
-
-after save => sub {
-    my $self = shift;
-    
-    $self->_run_attribute_hooks('save');
-};
-
-after load => sub {
-    my $self = shift;
-    
-    $self->_run_attribute_hooks('load');
-};
-
-after init => sub {
-    my $self = shift;
-    
-    $self->_run_attribute_hooks('init');
-};
+# before save => sub {
+#     my $self = shift;
+#     
+#     $self->must_satisfy;
+# };
+# 
+# after save => sub {
+#     my $self = shift;
+#     
+#     $self->_run_attribute_hooks('save');
+# };
+# 
+# after load => sub {
+#     my $self = shift;
+#     
+#     $self->_run_attribute_hooks('load');
+# };
+# 
+# after init => sub {
+#     my $self = shift;
+#     
+#     $self->_run_attribute_hooks('init');
+# };
 
 =head2 must_satisfy
 
