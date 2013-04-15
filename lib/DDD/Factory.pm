@@ -1,4 +1,4 @@
-package DDD::Repository;
+package DDD::Factory;
 use Moose;
 use namespace::autoclean;
 
@@ -7,14 +7,14 @@ with 'DDD::Role::Domain';
 
 =head1 NAME
 
-DDD::Repository - base class for a repository
+DDD::Factory - base class for a factory
 
 =head1 SYNOPSIS
 
-    package My::Repository;
+    package My::Factory;
     use Moose;
     
-    extends 'DDD::Repository';
+    extends 'DDD::Factory';
     
     # ...
 
