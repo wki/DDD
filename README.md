@@ -28,10 +28,10 @@ MyApp::Domain::XxxService
     'Model::Domain' => {
         class => 'MyApp::Domain',
         args  => {
-            schema      => sub { MyApp->model('DB')->schema },
-            storage     => sub { MyApp->model('FileStorage') },
-            log         => sub { MyApp->log },
-            environment => sub { MyApp->environment },
+            schema      => sub { shift->model('DB')->schema },
+            storage     => sub { shift->model('FileStorage') },
+            log         => sub { shift->log },
+            environment => sub { shift->environment },
         },
     },
     
@@ -42,7 +42,9 @@ MyApp::Domain::XxxService
 
 ## Domain Class ##
 
-The domain class is a Bread::Board container. Looks like this:
+The domain class is a Bread::Board container. It defines all infrastructure
+things as regular Moose attributes. All these attributes must get set via
+args in the Model::Domain config.
 
     package MyApp::Domain;
     use Moose;
@@ -50,8 +52,12 @@ The domain class is a Bread::Board container. Looks like this:
     
     extends 'DDD::Domain';
     
-    # services that look like attributes set via construction
+    # attribute values are set via Model configuration
     has log => ( ... );
+    
+    ### FIXME: do re really need to define everything twice?
+    ###        if all attributes have the very same name as the attributes
+    ###        of our domain, there would be no need.
     
     # services -- singleton lifecycle
     service fileservice => ( ... );
@@ -62,8 +68,38 @@ The domain class is a Bread::Board container. Looks like this:
     # aggregates, internally consist of a _xxx service and an xxx accessor
     aggregate orderlist => ( ... );
 
+## Classes inside Domain ##
+
+Idea: can we "autowire" things?
+
+    package MyApp::Domain::Xxx::ImportService;
+    
+    use Moose;
+    use MyApp::Domain;
+    use MyApp::Domain::Xxx::SomeOtherService;
+    
+    # OR: autowire => 1
+    # OR: autowire => '/xxx/some_other_service',
+    will_have some_other_service => (
+        is => 'ro',
+        isa => 'MyApp::Domain::Xxx::SomeOtherService',
+    );
+    
+    # is the same as:
+    has some_other_service => (
+        is => 'ro',
+        isa => 'MyApp::Domain::Xxx::SomeOtherService',
+        lazy_build => 1,
+    );
+    
+    sub _build_some_other_service {
+        $_->[0]->domain('MyApp::Domain::Xxx::SomeOtherService')
+    }
+
 
 ## Usage inside Catalyst Controller ##
+
+    ### FIXME: does a shortcut $c->domain make sense?
 
     # Example 1: initialize an aggregate and later load it
     my $agg = $c->model('Domain')->aggregate_name(%args);
