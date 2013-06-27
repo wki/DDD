@@ -46,4 +46,9 @@ factory create => (
     isa => 'My::Factory',
 );
 
+subdomain sales => (
+    isa => 'DemoDomain::Sales',
+);
+
+
 1;
