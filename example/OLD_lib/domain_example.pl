@@ -17,17 +17,17 @@ my $root_dir = dir($FindBin::Bin);
 
 say 'creating DemoDomain.';
 my $domain = DemoDomain->new(schema => $schema, root_dir => $root_dir);
-say "  domain: $domain";
+say "  domain: $domain, ISA: " . join(', ', @DemoDomain::ISA);
 say '';
 
-say 'calling orderlist Aggregate.';
-my $o1 = $domain->_orderlist;
-say "  o1: $o1";
-my $o2 = $domain->_orderlist;
-say "  o2: $o2";
-my $o42 = $domain->orderlist(id => 42);
-say "  o42: $o42";
-say '';
+# say 'calling orderlist Aggregate.';
+# my $o1 = $domain->_orderlist;
+# say "  o1: $o1";
+# my $o2 = $domain->_orderlist;
+# say "  o2: $o2";
+# my $o42 = $domain->orderlist(id => 42);
+# say "  o42: $o42";
+# say '';
 
 say 'calling file Service.';
 my $f1 = $domain->file_service;
@@ -41,7 +41,7 @@ say '';
 
 # factory Benutzung:
 
-my $o = $domain->create('My::Entity', $whatever);
+my $o = $domain->create('My::Entity', 'asdf');
 
 
 

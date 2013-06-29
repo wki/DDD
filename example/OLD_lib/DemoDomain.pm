@@ -25,7 +25,7 @@ has user => (
 #---------[ Services: singletons (in our case: per Request)
 service file_service => (
     isa          => 'My::Service',
-    dependencies => [ 'storage' ],
+    dependencies => [ 'schema' ],
 );
 
 service security => (
@@ -42,8 +42,13 @@ aggregate orderlist => (
 # can we define Entities and Values or a factory somehow?
 # reason: easy creation of them must be possible
 
-factory create => (
-    isa => 'My::Factory',
-);
+# factory create => (
+#     isa => 'My::Factory',
+# );
+
+# subdomain sales => (
+#     isa => 'DemoDomain::Sales',
+# );
+
 
 1;
