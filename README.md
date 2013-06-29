@@ -80,22 +80,29 @@ args in the Model::Domain config.
     
     # aggregates, internally consist of a _xxx service and an xxx accessor
     aggregate orderlist => ( ... );
+    
+    # TODO: subdomain -- allow hierarchical definition
+    # allow to call $domain->sales->some_service->some_method;
+    subdomain sales => ( ... );
+
+### Subdomain ###
+
+    package MyDomain::Sales;
+    use Moose;
+    use namespace::autoclean;
+    
+    extends 'DDD::Subdomain';    # or Domain ???
+
+    # same definitions as above. except dependencies may have a path
+    
+    service order_import => (
+        isa => 'MyDomain::Sales::OrderImport',
+        dependencies => {
+            schema => dep('/schema'),
+        }
+    );
 
 ## Classes inside Domain ##
-
-Idea: can we "autowire" things?
-
-    package MyApp::Domain::Xxx::ImportService;
-    use Moose;
-    use MyApp::Domain;
-    
-    extends 'DDD::Service';
-    
-    ### TODO: how can this attribute get constructed?
-    has some_other_service => (
-        is  => 'ro',
-        isa => 'MyApp::Domain::Xxx::SomeOtherService',
-    );
 
 
 ## Usage inside Catalyst Controller ##

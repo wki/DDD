@@ -51,4 +51,9 @@ aggregate orderlist => (
 # );
 
 
+subdomain sales => (
+    isa => 'DemoDomain::Sales',
+);
+
+
 1;
