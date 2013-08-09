@@ -13,7 +13,6 @@ sub prepare_arguments {
     
     warn 'Model::Vanilla::prepare_arguments, ',
          "$$, c=$c, class=${\$self->class}, model=${\$self->model}";
-    
     return {
         schema => $c->model($self->model)->schema,
     };

@@ -22,9 +22,17 @@ MyApp::Domain::<<Aggregate>>
 MyApp::Domain::<<Aggregate>>::Xxx
 MyApp::Domain::XxxService
 
+alternative (best way to be found)
+
+MyApp::Domain               Domain Namespace and Bread::Board Container
+MyApp::Domain::SubDomain::<<Aggregate>>
+MyApp::Domain::SubDomain::<<Aggregate>>::Xxx
+MyApp::Domain::SubDomain::XxxService
+
 
 ## Catalyst Configuration ##
 
+    # define all infrastructural things to be known by our domain
     'Model::Domain' => {
         class => 'MyApp::Domain',
         args  => {
@@ -35,6 +43,7 @@ MyApp::Domain::XxxService
         },
     },
     
+    # some other model which may get used by the domain
     'Model::FileStorage' => {
         root_dir => __path_to(root/files)__,
     },
@@ -53,7 +62,11 @@ args in the Model::Domain config.
     extends 'DDD::Domain';
     
     # attribute values are set via Model configuration
-    has log => ( ... );
+    # FIXME: maybe we should think about lazy evaluation
+    has schema      => ( ... );
+    has storage     => ( ... );
+    has log         => ( ... );
+    has environment => ( ... );
     
     ### FIXME: do re really need to define everything twice?
     ###        if all attributes have the very same name as the attributes
@@ -90,7 +103,6 @@ args in the Model::Domain config.
     );
 
 ## Classes inside Domain ##
-
 
 
 ## Usage inside Catalyst Controller ##
