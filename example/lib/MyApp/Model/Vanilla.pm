@@ -11,8 +11,8 @@ has model => ( is => 'ro', default => 'DB' );
 sub prepare_arguments {
     my ($self, $c) = @_;
     
-    # warn 'Model::Vanilla::prepare_arguments, ',
-    #      "$$, c=$c, class=${\$self->class}, model=${\$self->model}";
+    warn 'Model::Vanilla::prepare_arguments, ',
+        "PID=$$, c=$c, class=${\$self->class}, model=${\$self->model}";
     
     return {
         schema => $c->model($self->model)->schema,
