@@ -32,7 +32,11 @@ sub index :Path :Args(0) {
     my ( $self, $c ) = @_;
 
     # Hello World
-    $c->response->body( $c->welcome_message );
+    # $c->response->body( $c->welcome_message );
+    
+    my $vanilla = $c->model('Vanilla2');
+    
+    $c->response->body("hello world, vanilla=$vanilla\n");
 }
 
 =head2 default
