@@ -36,15 +36,13 @@ sub attr {
     # this method is curried (!)
     my $package = caller(1);
 
-    _resolve_isa_classes($package, \%args);
+    # _resolve_isa_classes($package, \%args);
 
     warn "Add attr '$package\::$name' [meta=$meta]";
 
     # TODO: check lifecycle and add to 'Request' scope List
     if (exists $args{lifecycle} && $args{lifecycle} =~ m{\bRequest\b}xms) {
-        # FIXME: add real attribute instead of name.
-        # $meta->_add_request_scoped_attribute($name);
-        # push @{$args{traits}}, 'RequestScope';
+        $args{clearer}   = "_clear_$name";
     }
 
     if (!exists $args{dependencies} || ref $args{dependencies} eq 'ARRAY') {
@@ -174,12 +172,38 @@ has _request_scoped_attributes => (
     },
 );
 
+after BUILD => sub {
+    my $self = shift;
+    
+    foreach my $a ($self->meta->get_all_attributes) {
+        next if !$a->can('lifecycle');
+        my $lifecycle = $a->lifecycle;
+        next if !$lifecycle;
+        next if $lifecycle !~ m{\b Request \b}xms;
+        
+        warn "Adding lifecycle: $lifecycle";
+        
+        $self->_add_request_scoped_attribute(
+            {
+                object    => $self,
+                attribute => $a->name,
+                clearer   => $a->clearer,
+            },
+        );
+    }
+};
+
 sub cleanup {
     my $self = shift;
 
-    # TODO: cleanup request-scoped variables
     warn "about to cleanup request-scoped things (${\$self->_nr_of_request_scoped_attributes})";
-    # warn $self->dump(3);
+
+    foreach my $a ($self->_all_request_scoped_attributes) {
+        my $object  = $a->{object};
+        my $clearer = $a->{clearer};
+        
+        $object->$clearer();
+    }
 }
 
 # package DDD::Trait::RequestScope;

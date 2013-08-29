@@ -19,7 +19,6 @@ attr user => (
     lifecycle => '+DDD::LifeCycle::Request', # or 'Request' if OX is installed
 );
 
-
 # TODO: has storage
 
 service some_service => (

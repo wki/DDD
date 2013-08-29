@@ -47,25 +47,6 @@ sub COMPONENT {
     # access service to get it lazily created
     $domain->sales;
 
-    warn 'Domain Services: ' .
-        join ', ', 
-            map { 
-                my $a = $_->associated_attribute;
-                my $name = $a->name;
-                my $predicate = "has_$name";
-                $name . ':' . 
-                ($a->has_value($domain) ? 'OK' : 'missing') .
-                ($a->has_value($domain) ? ':' . ref $domain->$name : '')
-            }
-            map { $domain->get_service($_) }
-            $domain->get_service_list;
-
-    warn 'Sub Domains: ' .
-        join ', ',
-            #map { $_->name }
-            map { $domain->get_sub_container($_) }
-            $domain->get_sub_container_list;
-
     my $self = $domain_class->new(%$merged_config, domain => $domain);
 
     $c->meta->add_after_method_modifier(
