@@ -1,51 +1,41 @@
 # ABSTRACT: a simple domain using Bread::Board::Declare only
-package Vanilla;
-use 5.016;
-use Moose;
-use Bread::Board::Declare;
-use Vanilla::Sales;
-use namespace::autoclean;
 
-# needed to allow subdomains and other things to get this value
-has domain => (
-    is      => 'ro',
-    isa     => 'Vanilla',
-    default => sub { shift },
-);
+package Vanilla;
+use DDD::Domain;
+use Vanilla::Sales;
+
+# auto-generated: 'domain' attribute
 
 # a regular Moose attribute
-has schema => (
+attr schema => (
     is  => 'ro',
     isa => 'DBIx::Class::Schema',
 );
 
+# a request-scoped attr
+attr user => (
+    is        => 'ro',
+    isa       => 'Object',
+    lifecycle => '+DDD::LifeCycle::Request', # or 'Request' if OX is installed
+);
+
+
 # TODO: has storage
 
-
-### a sample service
-has some_service => (
-    is           => 'ro',
+service some_service => (
     isa          => 'Vanilla::SomeService',
     dependencies => {
-        domain => dep('/domain'),    # also possible here: 'domain'
-        schema => 'schema',
+        schema => dep('/schema'),
     },
 );
 
-### a subdomain. 
-### If somebody depends on this subdomain, it must be build earlier.
-has sales => (
-    is         => 'ro',
-    isa        => 'Vanilla::Sales',
-    lifecycle  => 'Singleton',
-    lazy_build => 1,
+subdomain sales => (
+    isa => 'Vanilla::Sales',
 );
 
-sub _build_sales {
-    my $self = shift;
+# factory foo_generator => ( isa => 'Vanilla::FooGenerator' );
 
-    $self->add_sub_container( Vanilla::Sales->new(name => 'sales') );
-}
+# repository foo_storage => ( isa => 'Vanilla::FooStorage' );
 
 __PACKAGE__->meta->make_immutable;
 1;

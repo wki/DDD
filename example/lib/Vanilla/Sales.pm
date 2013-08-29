@@ -1,4 +1,5 @@
 package Vanilla::Sales;
+# use DDD::Subdomain;
 use Moose;
 use Bread::Board::Declare;
 use namespace::autoclean;
