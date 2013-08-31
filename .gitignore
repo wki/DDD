@@ -1,2 +1,6 @@
 DDD-*/
 DDD-*.tar.gz
+META.yml
+MYMETA.*
+Makefile
+blib/

@@ -1,17 +1,18 @@
 package Vanilla::SomeService;
 use 5.016;
-use Moose;
-use namespace::autoclean;
-
-has domain => (
-    is  => 'ro',
-    isa => 'Vanilla',
-);
+use DDD::Service;
 
 has schema => (
     is  => 'ro',
     isa => 'DBIx::Class::Schema',
 );
+
+# event listening
+on SomeEventName => sub {
+    my ($self, $event) = @_;
+    
+    warn 'SomeEventName caught.';
+};
 
 sub some_method {
     my $self = shift;

@@ -1,10 +1,10 @@
-package DDD::Base;
+package DDD::Base::Object;
 use Moose;
 use namespace::autoclean;
 
 =head1 NAME
 
-DDD::Base - base class for DDD
+DDD::Base::Object - common base class for most DDD objects
 
 =head1 SYNOPSIS
 

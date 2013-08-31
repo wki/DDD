@@ -8,11 +8,11 @@ use Bread::Board::ConstructorInjection (); # be save it is loaded.
 
 Moose::Exporter->setup_import_methods(
     with_meta => [
-        'attr', 
-        # 'aggregate',
+        'has', 
         'service', 'subdomain', 'factory', 'repository'
     ],
     also      => [
+        # with_meta has precedence over 'also' -- see Moose::Exporter
         'Moose', 'Bread::Board::Declare'
     ],
 );
@@ -24,13 +24,12 @@ sub init_meta {
     Moose->init_meta(%args);
 
     my $meta = $args{for_class}->meta;
-    $meta->superclasses('DDD::Domain::Super');
+    $meta->superclasses('DDD::Base::Domain');
 
     return $meta;
 }
 
-# exported sub
-sub attr {
+sub has {
     my ($meta, $name, %args) = @_;
 
     # this method is curried (!)
@@ -38,7 +37,7 @@ sub attr {
 
     # _resolve_isa_classes($package, \%args);
 
-    warn "Add attr '$package\::$name' [meta=$meta]";
+    warn "Add attribute '$package\::$name' [meta=$meta]";
 
     # TODO: check lifecycle and add to 'Request' scope List
     if (exists $args{lifecycle} && $args{lifecycle} =~ m{\bRequest\b}xms) {
@@ -58,69 +57,51 @@ sub attr {
     );
 }
 
-# # exported sub
-# sub aggregate {
-#     my ($meta, $name, %args) = @_;
-# 
-#     # this method is curried (!)
-#     my $package = caller(1);
-# 
-#     _resolve_isa_classes($package, \%args);
-# 
-#     # _name attribute as a service
-#     #   with extra domain dependency and optional id and row parameters
-#     push @{$args{dependencies}}, 'domain';
-#     $args{parameters}->{id}  = { isa => 'Str', optional => 1 };
-#     $args{parameters}->{row} = { isa => 'DBIx::Class::Row', optional => 1 };
-#     Moose::has($meta, "_$name", is => 'ro', %args);
-# 
-#     # name method as accessor
-#     Sub::Install::install_sub({
-#         code => sub {
-#             my $self = shift;
-# 
-#             return $self->resolve(
-#                 service    => "_$name",
-#                 parameters => ref $_[0] eq 'HASH'
-#                     ? $_[0]
-#                     : { @_ },
-#             );
-#         },
-#         into => $package,
-#         as   => $name
-#     });
-# }
+sub factory { 
+    my ($meta, $name, %args) = @_;
 
-sub factory { goto \&service }
+    _install('factory', $meta, $name, \%args);
+}
 
-sub repository { goto \&service }
+sub repository { 
+    my ($meta, $name, %args) = @_;
+
+    _install('repository', $meta, $name, \%args);
+}
 
 sub subdomain {
+    my ($meta, $name, %args) = @_;
+    
     # TODO: does loading the isa-class make sense?
     # TODO: does prefixing the $name with $package make sense?
     
-    goto \&service;
+    _install('subdomain', $meta, $name, \%args);
 }
 
-# exported sub
 sub service {
     my ($meta, $name, %args) = @_;
 
+    _install('service', $meta, $name, \%args);
+}
+
+sub _install {
+    my ($thing, $meta, $name, $args) = @_;
+
     # this method is curried (!)
-    my $package = caller(1);
+    my $package = caller(2);
 
-    _resolve_isa_classes($package, \%args);
+    _resolve_isa_classes($package, $args);
 
-    warn "Add service '$package\::$name' [meta=$meta]";
+    warn "Add $thing '$package\::$name' [meta=$meta]";
 
     # name attribute as a service
-    if (!exists $args{dependencies} || ref $args{dependencies} eq 'ARRAY') {
-        push @{$args{dependencies}}, 'domain';
+    if (!exists $args->{dependencies} || ref $args->{dependencies} eq 'ARRAY') {
+        push @{$args->{dependencies}}, 'domain';
     } else {
-        $args{dependencies}->{domain} = Bread::Board::Declare::dep('/domain');
+        $args->{dependencies}->{domain} = Bread::Board::Declare::dep('/domain');
     }
 
-    my $class = $args{isa}
+    my $class = $args->{isa}
         or croak "Service '$name': isa is missing";
 
     my $builder = sub {
@@ -138,7 +119,7 @@ sub service {
         lifecycle => 'Singleton',
         default   => $builder,
         lazy      => 1,
-        %args,
+        %$args,
     );
 }
 
@@ -149,72 +130,5 @@ sub _resolve_isa_classes {
     # $args->{isa} =~ s{\A [+]}{}xms and return;
     # $args->{isa} = "$package\::$args->{isa}";
 }
-
-package DDD::Domain::Super;
-use Moose;
-use Bread::Board::Declare;
-
-has domain => (
-    is       => 'ro',
-    block    => sub { $_[1] },
-    weak_ref => 1,
-);
-
-has _request_scoped_attributes => (
-    traits  => ['Array'],
-    is      => 'ro',
-    isa     => 'ArrayRef',
-    default => sub { [] },
-    handles => {
-        _add_request_scoped_attribute    => 'push',
-        _all_request_scoped_attributes   => 'elements',
-        _nr_of_request_scoped_attributes => 'count',
-    },
-);
-
-after BUILD => sub {
-    my $self = shift;
-    
-    foreach my $a ($self->meta->get_all_attributes) {
-        next if !$a->can('lifecycle');
-        my $lifecycle = $a->lifecycle;
-        next if !$lifecycle;
-        next if $lifecycle !~ m{\b Request \b}xms;
-        
-        warn "Adding lifecycle: $lifecycle";
-        
-        $self->_add_request_scoped_attribute(
-            {
-                object    => $self,
-                attribute => $a->name,
-                clearer   => $a->clearer,
-            },
-        );
-    }
-};
-
-sub cleanup {
-    my $self = shift;
-
-    warn "about to cleanup request-scoped things (${\$self->_nr_of_request_scoped_attributes})";
-
-    foreach my $a ($self->_all_request_scoped_attributes) {
-        my $object  = $a->{object};
-        my $clearer = $a->{clearer};
-        
-        $object->$clearer();
-    }
-}
-
-# package DDD::Trait::RequestScope;
-# use Moose::Role;
-#
-# Moose::Util::meta_attribute_alias('RequestScope');
-#
-# after install_accessors => sub {
-#     my $self = shift;
-#
-#     warn "after install accessors self=$self";
-# };
 
 1;

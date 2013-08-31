@@ -2,12 +2,19 @@ package DDD::Service;
 use Moose;
 use namespace::autoclean;
 
-extends 'DDD::Base';
-with 'DDD::Role::Domain';
+Moose::Exporter->setup_import_methods(
+    with_meta => [
+        'on',
+    ],
+    also      => [
+        # with_meta has precedence over 'also' -- see Moose::Exporter
+        'Moose'
+    ],
+);
 
 =head1 NAME
 
-DDD::Entity - base class for a service
+DDD::Service - DSL for Services
 
 =head1 SYNOPSIS
 
@@ -16,6 +23,32 @@ DDD::Entity - base class for a service
 =head1 METHODS
 
 =cut
+
+sub init_meta {
+    my $package = shift;
+    my %args    = @_;
+
+    Moose->init_meta(%args);
+
+    my $meta = $args{for_class}->meta;
+    $meta->superclasses('DDD::Base::Service');
+
+    return $meta;
+}
+
+
+=head2 on
+
+=cut
+
+sub on {
+    my ($meta, $event_name, $sub) = @_;
+    
+    warn "on '$event_name' [meta=$meta]";
+    
+    # Service Class Metaobject must have the right trait applied
+    $meta->subscribe_to($event_name, $sub);
+}
 
 =head1 AUTHOR
 

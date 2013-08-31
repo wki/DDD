@@ -1,19 +1,19 @@
-# ABSTRACT: a simple domain using Bread::Board::Declare only
+# ABSTRACT: a simple example domain
 
 package Vanilla;
 use DDD::Domain;
-use Vanilla::Sales;
+use Vanilla::Sales; # Subdomain
 
 # auto-generated: 'domain' attribute
 
 # a regular Moose attribute
-attr schema => (
+has schema => (
     is  => 'ro',
     isa => 'DBIx::Class::Schema',
 );
 
 # a request-scoped attr
-attr user => (
+has user => (
     is        => 'ro',
     isa       => 'Object',
     lifecycle => '+DDD::LifeCycle::Request', # or 'Request' if OX is installed
@@ -29,12 +29,11 @@ service some_service => (
 );
 
 subdomain sales => (
-    isa => 'Vanilla::Sales',
+    isa => 'Vanilla::Sales', # FIXME: can we auto-require?
 );
 
 # factory foo_generator => ( isa => 'Vanilla::FooGenerator' );
 
 # repository foo_storage => ( isa => 'Vanilla::FooStorage' );
 
-__PACKAGE__->meta->make_immutable;
 1;

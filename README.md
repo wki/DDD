@@ -6,23 +6,16 @@ Goals:
 
 * avoid logic in controllers
 
-* keep the DBIC layer simple
-
 * allow accessing misc infrastructure layers
 
 * access current user or running environment
+
+* simple PubSub mechanism for inter-process communication
 
 
 ## Class Layout ##
 
 MyApp::Model::Domain        access Domain -- via 'C::M::Factory::PerRequest'
-
-MyApp::Domain               Domain Namespace and Bread::Board Container
-MyApp::Domain::<<Aggregate>>
-MyApp::Domain::<<Aggregate>>::Xxx
-MyApp::Domain::XxxService
-
-alternative (best way to be found)
 
 MyApp::Domain               Domain Namespace and Bread::Board Container
 MyApp::Domain::SubDomain::<<Aggregate>>
@@ -56,17 +49,14 @@ things as regular Moose attributes. All these attributes must get set via
 args in the Model::Domain config.
 
     package MyApp::Domain;
-    use Moose;
-    use namespace::autoclean;
-    
-    extends 'DDD::Domain';
+    use 'DDD::Domain';
     
     # attribute values are set via Model configuration
     # FIXME: maybe we should think about lazy evaluation
-    has schema      => ( ... );
-    has storage     => ( ... );
-    has log         => ( ... );
-    has environment => ( ... );
+    attr schema      => ( ... );
+    attr storage     => ( ... );
+    attr log         => ( ... );
+    attr environment => ( ... );
     
     ### FIXME: do re really need to define everything twice?
     ###        if all attributes have the very same name as the attributes
