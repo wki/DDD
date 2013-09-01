@@ -96,7 +96,9 @@ sub _install {
 
     # name attribute as a service
     if (!exists $args->{dependencies} || ref $args->{dependencies} eq 'ARRAY') {
+        # FIXME: make this work if possible.
         push @{$args->{dependencies}}, 'domain';
+        die 'ArrayRef dependencies do not work, sorry.';
     } else {
         $args->{dependencies}->{domain} = Bread::Board::Declare::dep('/domain');
     }

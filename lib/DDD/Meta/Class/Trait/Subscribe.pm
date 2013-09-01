@@ -11,7 +11,11 @@ DDD::Meta::Class::Trait::Subscribe - blabla
 
 =head1 DESCRIPTION
 
-TODO: write something
+a trait applied to classes intended for event listening. Typically only
+application-services and domain-services are candidates for this.
+
+In the construction phase the DSL-keyword 'on' captures the events for
+listening inside the class meta object. This is provided by this class.
 
 =head1 ATTRIBUTES
 

@@ -3,9 +3,8 @@ use warnings;
 use Test::More;
 
 use ok 'DDD::Domain';
-use ok 'DDD::Aggregate';
-use ok 'DDD::Service';
 
+### FIXME: put domain into separate files. Otherwise import/unimport seem to fail.
 {
     # --------------------------------- our "Infrastructure"
     package My::Schema;
@@ -26,8 +25,7 @@ use ok 'DDD::Service';
     has foo    => (is => 'ro', isa => 'Str', predicate => 'has_foo');
     
     package My::Domain::DoIt;
-    use Moose;
-    extends 'DDD::Service';
+    use DDD::Service;
     has schema  => (is => 'ro', isa => 'Object');
     has storage => (is => 'ro', isa => 'Object');
     
@@ -37,23 +35,27 @@ use ok 'DDD::Service';
     has storage => (is => 'ro', isa => 'Object');
     
     service do_it => (
-        isa          => 'DoIt',
-        dependencies => [ 'schema', 'storage' ],
-    );
-
-    aggregate thing => (
-        isa          => '+Some::Domain::Thing',
-        dependencies => [ 'schema' ],
-        parameters   => {
-            foo => { isa => 'Int', optional => 1 },
+        isa          => 'My::Domain::DoIt',
+        dependencies => {
+            schema  => dep('/schema'),
+            storage => dep('/storage'),
         },
     );
+
+    # aggregate thing => (
+    #     isa          => '+Some::Domain::Thing',
+    #     dependencies => [ 'schema' ],
+    #     parameters   => {
+    #         foo => { isa => 'Int', optional => 1 },
+    #     },
+    # );
 }
 
 my $schema  = My::Schema->new;
 my $storage = My::Storage->new;
 my $domain  = My::Domain->new(schema => $schema, storage => $storage);
 
+is $domain->domain,  $domain,  'domain reflects to itself';
 is $domain->schema,  $schema,  'schema can get retrieved';
 is $domain->storage, $storage, 'storage can get retrieved';
 

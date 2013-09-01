@@ -34,20 +34,21 @@ has _listeners => (
 
 =cut
 
-=head2 add_listener ( $target, $event )
+=head2 add_listener ( $event, $target, $method )
 
 adds the target object as a listener wanting to capture a given event.
 
 =cut
 
-sub add_listener ( $target, $event ) {
-    my ($self, $target, $event) = @_;
+sub add_listener {
+    my ($self, $event, $target, $method) = @_;
     
-    $self->_add_listener( { target => $target, event => $event } );
+    $self->_add_listener(
+        { target => $target, event => $event, method => $method }
+    );
 }
 
-
-=head2 remove_listener ( $target, $event )
+=head2 remove_listener ( $event, $target, $method )
 
 removes a listener
 
@@ -70,13 +71,12 @@ sub publish {
     $event_name =~ s{\A .* ::}{}xms;
         
     foreach my $listener ($self->_all_listeners) {
-        next if $listener->{event} && $listener->{event} ne $event_name;
+        my ($event, $target, $method) = @$listener{qw(event target method)};
+        next if $event && $event ne $event_name;
         
-        ### FIXME: how do we call our object?
-        
+        $target->$method($event_object);
     }
 }
-
 
 __PACKAGE__->meta->make_immutable;
 1;
