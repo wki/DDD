@@ -2,7 +2,7 @@ package DDD::Value;
 use Moose;
 use namespace::autoclean;
 
-extends 'DDD::Base';
+extends 'DDD::Base::Object';
 
 =head1 NAME
 

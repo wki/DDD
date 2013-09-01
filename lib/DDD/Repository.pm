@@ -2,7 +2,7 @@ package DDD::Repository;
 use Moose;
 use namespace::autoclean;
 
-extends 'DDD::Base';
+extends 'DDD::Base::Object';
 with 'DDD::Role::Domain';
 
 =head1 NAME

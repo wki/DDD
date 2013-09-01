@@ -17,7 +17,7 @@ TODO: write something
 
 =cut
 
-=head2 subscribtions
+=head2 subscribed_events
 
 contains all events with callbacks the service is subscribing to.
 The reason is that the 'on' keyword only has access to the meta object of
@@ -25,7 +25,7 @@ the class.
 
 =cut
 
-has subscribtions => (
+has subscribed_events => (
     is      => 'ro',
     isa     => 'ArrayRef',
     default => sub { [] },
@@ -42,7 +42,8 @@ has subscribtions => (
 sub subscribe_to {
     my ($self, $event, $callback) = @_;
     
-    push @{$self->subscribtions}, { event => $event, callback => $callback };
+    warn "subscribe to '$event', [meta=$self]";
+    push @{$self->subscribed_events}, { event => $event, callback => $callback };
 }
 
 1;

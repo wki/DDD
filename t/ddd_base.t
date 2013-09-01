@@ -2,6 +2,6 @@ use strict;
 use warnings;
 use Test::More;
 
-use ok 'DDD::Base';
+use ok 'DDD::Base::Object';
 
 done_testing;
