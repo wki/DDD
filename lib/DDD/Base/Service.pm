@@ -1,6 +1,4 @@
 package DDD::Base::Service;
-# use DDD::Meta::Class::Trait::Subscribe; # FIXME: can we avoid this line?
-# use Moose -traits => 'Subscribe';
 use Moose;
 use namespace::autoclean;
 
@@ -15,7 +13,7 @@ DDD::Base::Service - base class for a Domain- or Application-Service
 
     package Domain::Xxx::Service;
     use DDD::Service;
-    
+
     # define methods etc.
 
 =head1 DESCRIPTION
@@ -30,33 +28,73 @@ Behind the scenes, DDD::Base::Service is taken as a super class.
 
 =cut
 
-our %seen;
 sub BUILD {
     my $self = shift;
+    
+    $self->_construct_method_modifiers;
+    $self->_add_event_listeners;
+}
+
+our %seen;
+sub _construct_method_modifiers {
+    my $self = shift;
     my $meta = $self->meta;
-    
+
     return if $seen{ref $self}++;
-    
+
     my %methods = map { ($_ => 1) } $meta->get_method_list;
     delete $methods{$_} for 'meta', $meta->get_attribute_list;
-    
-    warn 'Service is built.';
-    warn 'methods: ' . join(', ', sort keys %methods);
-    
+
     foreach my $method_name (sort keys %methods) {
         $meta->add_around_method_modifier(
             $method_name,
             sub {
                 my ($orig, $self, @args) = @_;
-                
-                warn "METHOD '$method_name' before";
+
+                $self->_enter_method($method_name);
+
                 my $result = $self->$orig(@args);
-                warn "METHOD '$method_name' after";
+
+                # FIXME: does a warning make sense if events are expected
+                #        but no eventpublisher is present?
+                $self->process_events
+                    if $self->has_event_publisher;
+
+                $self->_leave_method($method_name);
+
                 return $result;
             }
         );
     }
 }
+
+sub _add_event_listeners {
+    my $self = shift;
+    
+    return if !$self->has_event_publisher;
+    
+    $self->event_publisher->add_listener(
+        $_->{event}, $self, $_->{callback},
+    )
+        for $self->all_subscribed_events;
+}
+
+=head2 _enter_method ( $method_name )
+
+a pluggable hook called before entering the body of a service method
+
+=cut
+
+sub _enter_method {}
+
+=head2 _leave_method ( $method_name )
+
+a pluggable hook called after leaving the body of a service method
+
+=cut
+
+sub _leave_method {}
+
 
 =head2 all_subscribed_events
 
@@ -69,9 +107,9 @@ Depending on context, returns a list or an arrayref.
 
 sub all_subscribed_events {
     my $self = shift;
-    
+
     my $subscribed_events = $self->meta->subscribed_events;
-    
+
     return wantarray
         ? @$subscribed_events
         : $subscribed_events;

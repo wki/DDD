@@ -17,11 +17,12 @@ DDD::Base::EventEmitter - Base class for all event emitting objects
 =cut
 
 has event_publisher => (
-    is  => 'ro',
-    isa => 'DDD::EventPublisher',
-    handles => [
-        'publish',
-    ]
+    is        => 'ro',
+    isa       => 'DDD::EventPublisher',
+    predicate => 'has_event_publisher',
+    handles   => [
+        'publish', 'process_events',
+    ],
 );
 
 =head1 METHODS
