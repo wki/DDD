@@ -12,6 +12,7 @@ Goals:
 
 * simple PubSub mechanism for inter-process communication
 
+![Class Diagram](Hierarchie_Basisklassen.png)
 
 ## Class Layout ##
 
@@ -21,7 +22,6 @@ MyApp::Domain               Domain Namespace and Bread::Board Container
 MyApp::Domain::SubDomain::<<Aggregate>>
 MyApp::Domain::SubDomain::<<Aggregate>>::Xxx
 MyApp::Domain::SubDomain::XxxService
-
 
 ## Catalyst Configuration ##
 
