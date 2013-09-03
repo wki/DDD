@@ -24,13 +24,13 @@ DDD - base classes for DDD models
         dependencies => [ 'log' ],
     );
     
-    aggregate orderlist => (
-        isa          => '+My::Orderlist', # no prefix inserted
-        dependencies => [ 'schema', 'log' ],
-        parameters   => {
-            foo => { isa => 'Int', optional => 1 },
-        },
-    );
+    # aggregate orderlist => (
+    #     isa          => '+My::Orderlist', # no prefix inserted
+    #     dependencies => [ 'schema', 'log' ],
+    #     parameters   => {
+    #         foo => { isa => 'Int', optional => 1 },
+    #     },
+    # );
     
     1;
 

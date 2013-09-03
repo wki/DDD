@@ -19,16 +19,15 @@ TODO: write something
 =cut
 
 has _listeners => (
-    traits => ['Array'],
-    is => 'rw',
-    isa => 'ArrayRef',
+    traits  => ['Array'],
+    is      => 'rw',
+    isa     => 'ArrayRef',
     default => sub { [] },
     handles => {
         _add_listener  => 'push',
         _all_listeners => 'elements',
     }
 );
-
 
 =head1 METHODS
 
@@ -42,20 +41,26 @@ adds the target object as a listener wanting to capture a given event.
 
 sub add_listener {
     my ($self, $event, $target, $method) = @_;
-    
+
     $self->_add_listener(
         { target => $target, event => $event, method => $method }
     );
 }
 
-=head2 remove_listener ( $event, $target, $method )
+=head2 remove_listener ( $event, $target [, $method ] )
 
-removes a listener
+removes a listener. Only event and target are evaluated, method is ignored.
 
 =cut
 
 sub remove_listener {
-    ...
+    my ($self, $event, $target) = @_;
+
+    my $index = $self->_listeners->first_index( sub {
+        $_->{event} eq $event && $_->{target} eq $target
+    });
+
+    $self->_listeners->delete($index) if $index >= 0;
 }
 
 =head2 publish ( $event_object )
@@ -66,14 +71,14 @@ publishes an event
 
 sub publish {
     my ($self, $event_object) = @_;
-    
+
     my $event_name = ref $event_object;
     $event_name =~ s{\A .* ::}{}xms;
-        
+
     foreach my $listener ($self->_all_listeners) {
         my ($event, $target, $method) = @$listener{qw(event target method)};
         next if $event && $event ne $event_name;
-        
+
         $target->$method($event_object);
     }
 }
