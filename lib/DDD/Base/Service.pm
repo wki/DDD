@@ -1,9 +1,10 @@
 package DDD::Base::Service;
-use DDD::Meta::Class::Trait::Subscribe; # FIXME: can we avoid this line?
-use Moose -traits => 'Subscribe';
+# use DDD::Meta::Class::Trait::Subscribe; # FIXME: can we avoid this line?
+# use Moose -traits => 'Subscribe';
+use Moose;
 use namespace::autoclean;
 
-extends 'DDD::Base::Object';
+extends 'DDD::Base::EventEmitter';
 with 'DDD::Role::Domain';
 
 =head1 NAME
@@ -28,6 +29,34 @@ Behind the scenes, DDD::Base::Service is taken as a super class.
 =head1 METHODS
 
 =cut
+
+our %seen;
+sub BUILD {
+    my $self = shift;
+    my $meta = $self->meta;
+    
+    return if $seen{ref $self}++;
+    
+    my %methods = map { ($_ => 1) } $meta->get_method_list;
+    delete $methods{$_} for 'meta', $meta->get_attribute_list;
+    
+    warn 'Service is built.';
+    warn 'methods: ' . join(', ', sort keys %methods);
+    
+    foreach my $method_name (sort keys %methods) {
+        $meta->add_around_method_modifier(
+            $method_name,
+            sub {
+                my ($orig, $self, @args) = @_;
+                
+                warn "METHOD '$method_name' before";
+                my $result = $self->$orig(@args);
+                warn "METHOD '$method_name' after";
+                return $result;
+            }
+        );
+    }
+}
 
 =head2 all_subscribed_events
 

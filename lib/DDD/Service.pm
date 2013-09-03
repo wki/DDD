@@ -6,7 +6,11 @@ Moose::Exporter->setup_import_methods(
     with_meta => [
         'on',
     ],
-    also      => [
+    class_metaroles => {
+        class  => ['DDD::Service::Meta::Role::Class'],
+        # method => ['DDD::Service::Meta::Role::Method'],
+    },
+    also => [
         # with_meta has precedence over 'also' -- see Moose::Exporter
         'Moose'
     ],
@@ -32,10 +36,9 @@ sub init_meta {
 
     my $meta = $args{for_class}->meta;
     $meta->superclasses('DDD::Base::Service');
-
+    
     return $meta;
 }
-
 
 =head2 on
 
@@ -44,7 +47,7 @@ sub init_meta {
 sub on {
     my ($meta, $event_name, $sub) = @_;
     
-    warn "on '$event_name' [meta=$meta]";
+    # warn "on '$event_name' [meta=$meta]";
     
     # Service Class Metaobject must have the right trait applied
     $meta->subscribe_to($event_name, $sub);

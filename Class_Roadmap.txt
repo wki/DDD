@@ -1,0 +1,36 @@
+Overview of all Classes
+-----------------------
+
+DDD                         empty package, just contains POD
+
+DDD::Base::Domain           Base class for domain objects, auto-assigned via DSL
+DDD::Base::Object           Common base class for almost all DDD-objects
+DDD::Base::Service          Base class for service objects, auto-assigned via DSL
+
+DDD::Domain                 Domain DSL *
+DDD::Service                Service DSL *
+DDD::Subdomain              Subdomain DSL * -- does it make sense?
+
+DDD::EventPublisher         Publish/Subscribe
+
+DDD::Aggregate              Base class for Aggregate
+DDD::Entity                 Base class for Entity
+DDD::Event                  Base class for Event
+DDD::Factory                Base class for Factory
+DDD::Repository             Base class for Repository
+DDD::Value                  Base class for Value
+
+DDD::LifeCycle::Request     same as Bread::Board::LifeCycle::Request from OX
+
+DDD::Role::Domain           contains 'domain' attribute
+DDD::Role::DBIC::Result     remove?
+DDD::Role::DBIC::Schema     remove?
+
+DDD::Service::Meta::Role::Class meta role for Service object
+
+Catalyst::Model::DDD        Catalyst Model for a domain
+
+
+----
+
+* DSL-Classes: just one use-statement, that's it!

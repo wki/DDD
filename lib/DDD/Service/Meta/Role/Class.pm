@@ -1,17 +1,15 @@
-package DDD::Meta::Class::Trait::Subscribe;
+package DDD::Service::Meta::Role::Class;
 use Moose::Role;
-
-Moose::Util::meta_class_alias('Subscribe');
 
 =head1 NAME
 
-DDD::Meta::Class::Trait::Subscribe - blabla
+DDD::Service::Meta::Role::Class - role for the Service Class Meta Object
 
 =head1 SYNOPSIS
 
 =head1 DESCRIPTION
 
-a trait applied to classes intended for event listening. Typically only
+a role applied to classes intended for event listening. Typically only
 application-services and domain-services are candidates for this.
 
 In the construction phase the DSL-keyword 'on' captures the events for
@@ -46,7 +44,7 @@ has subscribed_events => (
 sub subscribe_to {
     my ($self, $event, $callback) = @_;
     
-    warn "subscribe to '$event', [meta=$self]";
+    # warn "subscribe to '$event', [meta=$self]";
     push @{$self->subscribed_events}, { event => $event, callback => $callback };
 }
 

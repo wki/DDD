@@ -1,38 +1,22 @@
 use strict;
 use warnings;
+use DDD::EventPublisher;
 use Test::More;
+use Test::Exception;
 
-{
-    package S;
-    use DDD::Service;
-
-    has some_attribute => (
-        is      => 'ro',
-        isa     => 'Str',
-        default => '',
-    );
-
-    on SomeEventName => sub {
-        my ($self, $event) = @_;
-
-        $self->some_attribute( $self->some_attribute . 'event' );
-    };
-
-    sub some_method {
-        my $self = shift;
-
-        $self->some_attribute( $self->some_attribute . 'method' );
-    }
-}
+use FindBin;
+use lib "$FindBin::Bin/lib";
 
 {
     package D;
     use Moose;
 }
 
+use ok 'Demo::Domain::TestService';
+
 note 'service class behavior';
 {
-    my $meta = S->meta;
+    my $meta = Demo::Domain::TestService->meta;
 
     can_ok $meta, 'subscribed_events';
 
@@ -41,16 +25,16 @@ note 'service class behavior';
         'subscribed to one event';
 
     is $meta->subscribed_events->[0]->{event},
-        'SomeEventName',
-        'subscribed to "SomeEventName"';
+        'SomethingHappened',
+        'subscribed to "SomethingHappend"';
 }
 
-note 'service object behavior';
+note 'service object behavior w/o publisher';
 {
     my $domain = D->new;
-    my $s = S->new(domain => $domain);
+    my $s = Demo::Domain::TestService->new(domain => $domain);
 
-    can_ok $s, 'some_attribute', 'some_method', 'all_subscribed_events';
+    can_ok $s, 'message', 'test_method', 'publishing_method', 'all_subscribed_events';
     
     my @subscribed_events = $s->all_subscribed_events;
     is scalar @subscribed_events,
@@ -62,6 +46,32 @@ note 'service object behavior';
         1,
         'subscribed to one event (scalar)';
     
+    $s->test_method;
+    is $s->message,
+        'method',
+        'test_method called';
+    
+    dies_ok { $s->publishing_method }
+        'calling a publishing method w/o publisher dies';
+}
+
+note 'service object behavior w/ publisher';
+{
+    my $p = DDD::EventPublisher->new;
+    my $domain = D->new;
+    my $s = Demo::Domain::TestService->new(
+        domain => $domain, 
+        event_publisher => $p,
+    );
+    
+    is $s->message,
+        '',
+        'message empty';
+    
+    $s->publishing_method;
+    is $s->message,
+        'publishcallback',
+        'successfully published and subscribed';
 }
 
 done_testing;
