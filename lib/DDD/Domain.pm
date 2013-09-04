@@ -8,7 +8,7 @@ use Bread::Board::ConstructorInjection (); # be save it is loaded.
 
 Moose::Exporter->setup_import_methods(
     with_meta => [
-        'has', 
+        'has',
         'service', 'subdomain', 'factory', 'repository'
     ],
     also      => [
@@ -37,8 +37,6 @@ sub has {
 
     # _resolve_isa_classes($package, \%args);
 
-    warn "Add attribute '$package\::$name' [meta=$meta]";
-
     # TODO: check lifecycle and add to 'Request' scope List
     if (exists $args{lifecycle} && $args{lifecycle} =~ m{\bRequest\b}xms) {
         $args{clearer}   = "_clear_$name";
@@ -57,31 +55,59 @@ sub has {
     );
 }
 
-sub factory { 
+sub factory {
     my ($meta, $name, %args) = @_;
 
-    _install('factory', $meta, $name, \%args);
+    _install(
+        'factory',
+        $meta, $name,
+        \%args,
+    );
 }
 
-sub repository { 
+sub repository {
     my ($meta, $name, %args) = @_;
 
-    _install('repository', $meta, $name, \%args);
+    _install(
+        'repository',
+        $meta, $name,
+        \%args,
+    );
 }
 
 sub subdomain {
     my ($meta, $name, %args) = @_;
-    
+
     # TODO: does loading the isa-class make sense?
     # TODO: does prefixing the $name with $package make sense?
-    
-    _install('subdomain', $meta, $name, \%args);
+
+    my $class = $args{isa};
+
+    _install(
+        'subdomain',
+        $meta, $name,
+        {
+            %args,
+            builder => sub {
+                my $self = shift;
+
+                my $service = $class->new(name => $name);
+                $self->add_sub_container($service);
+
+                return $service;
+            }
+        }
+    );
 }
 
 sub service {
     my ($meta, $name, %args) = @_;
 
-    _install('service', $meta, $name, \%args);
+    _install(
+        'service',
+        $meta, $name,
+        \%args,
+    );
 }
 
 sub _install {
@@ -91,8 +117,6 @@ sub _install {
     my $package = caller(2);
 
     _resolve_isa_classes($package, $args);
-
-    warn "Add $thing '$package\::$name' [meta=$meta]";
 
     # name attribute as a service
     if (!exists $args->{dependencies} || ref $args->{dependencies} eq 'ARRAY') {
@@ -106,21 +130,12 @@ sub _install {
     my $class = $args->{isa}
         or croak "Service '$name': isa is missing";
 
-    my $builder = sub {
-        my $self = shift;
-
-        my $service = $class->new(name => $name);
-        $self->add_sub_container($service);
-
-        return $service;
-    };
-
     Moose::has(
         $meta, $name,
         is        => 'ro',
         lifecycle => 'Singleton',
-        default   => $builder,
-        lazy      => 1,
+        # default   => $builder,
+        # lazy      => 1,
         %$args,
     );
 }

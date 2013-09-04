@@ -2,6 +2,9 @@ package Demo::Domain::TestService;
 use DDD::Service;
 use Demo::Domain::SomethingHappened;
 
+has schema  => (is => 'ro', isa => 'Object');
+has storage => (is => 'ro', isa => 'Object');
+
 has message => (
     is      => 'rw',
     isa     => 'Str',
