@@ -88,7 +88,7 @@ sub subdomain {
         $meta, $name,
         {
             %args,
-            builder => sub {
+            default => sub {
                 my $self = shift;
 
                 my $service = $class->new(name => $name);
