@@ -6,8 +6,9 @@ use namespace::autoclean;
 ### sub _resultset_name { die 'no resultset defined' };
 ### sub _handles { ':all' };
 
-extends 'DDD::Base::Object';
-with 'DDD::Role::DBIC::Schema';
+extends 'DDD::Base::EventEmitter';
+
+# with 'DDD::Role::DBIC::Schema';
 # with 'DDD::Role::DBIC::Result';
 
 =head1 NAME
