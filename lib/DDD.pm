@@ -24,6 +24,25 @@ DDD - base classes for DDD models
         dependencies => [ 'log' ],
     );
     
+    factory thing_builder => (
+        isa => 'ThingBuilder',
+    );
+    
+    repository thing_repository => (
+        isa => 'ThingRepository',
+    );
+    
+    subdomain notification => (
+        isa => 'StatisticsCollector::Domain::Measurement',
+        dependencies => {
+            # reference to global schema
+            schema  => dep('/schema'),
+            
+            # reference to this class log
+            log     => 'log',
+        },
+    );
+    
     # aggregate orderlist => (
     #     isa          => '+My::Orderlist', # no prefix inserted
     #     dependencies => [ 'schema', 'log' ],
