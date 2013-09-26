@@ -4,3 +4,4 @@ META.yml
 MYMETA.*
 Makefile
 blib/
+.build/
