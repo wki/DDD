@@ -20,20 +20,23 @@ DDD - base classes for DDD models
     );
     
     service file_service => (
-        isa          => 'FileService', # will expand to My::Domain::FileService
+        isa          => 'FileService', 
         dependencies => [ 'log' ],
     );
     
     factory thing_builder => (
-        isa => 'ThingBuilder',
+        isa => 'ThingBuilder', # My::Domain::*
     );
     
-    repository thing_repository => (
-        isa => 'ThingRepository',
+    repository all_things => (
+        isa          => 'AllThings::DBIC', # My::Domain::*
+        depandencies => {
+            schema  => dep('/schema'),
+        }
     );
     
-    subdomain notification => (
-        isa => 'StatisticsCollector::Domain::Measurement',
+    subdomain measurement => (
+        isa => 'Measurement', # My::Domain::*
         dependencies => {
             # reference to global schema
             schema  => dep('/schema'),

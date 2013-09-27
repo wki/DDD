@@ -3,6 +3,7 @@ use Moose ();
 use Moose::Exporter;
 use Carp;
 use Sub::Install;
+use Module::Load;
 use Bread::Board::Declare ();
 use Bread::Board::ConstructorInjection (); # be save it is loaded.
 
@@ -35,8 +36,6 @@ sub has {
     # this method is curried (!)
     my $package = caller(1);
 
-    # _resolve_isa_classes($package, \%args);
-
     # TODO: check lifecycle and add to 'Request' scope List
     if (exists $args{lifecycle} && $args{lifecycle} =~ m{\bRequest\b}xms) {
         $args{clearer}   = "_clear_$name";
@@ -58,6 +57,9 @@ sub has {
 sub factory {
     my ($meta, $name, %args) = @_;
 
+    my $package = caller(1);
+    _resolve_isa_classes($package, \%args);
+
     _install(
         'factory',
         $meta, $name,
@@ -67,6 +69,9 @@ sub factory {
 
 sub repository {
     my ($meta, $name, %args) = @_;
+
+    my $package = caller(1);
+    _resolve_isa_classes($package, \%args);
 
     _install(
         'repository',
@@ -80,7 +85,9 @@ sub subdomain {
 
     # TODO: does loading the isa-class make sense?
     # TODO: does prefixing the $name with $package make sense?
-
+    my $package = caller(1);
+    _resolve_isa_classes($package, \%args);
+    
     my $class = $args{isa};
 
     _install(
@@ -103,6 +110,9 @@ sub subdomain {
 sub service {
     my ($meta, $name, %args) = @_;
 
+    my $package = caller(1);
+    _resolve_isa_classes($package, \%args);
+    
     _install(
         'service',
         $meta, $name,
@@ -116,13 +126,14 @@ sub _install {
     # this method is curried (!)
     my $package = caller(2);
 
-    _resolve_isa_classes($package, $args);
+    # _resolve_isa_classes($package, $args);
 
     # name attribute as a service
-    if (!exists $args->{dependencies} || ref $args->{dependencies} eq 'ARRAY') {
+    $args->{dependencies} //= {};
+    if (ref $args->{dependencies} eq 'ARRAY') {
         # FIXME: make this work if possible.
         push @{$args->{dependencies}}, 'domain';
-        die 'ArrayRef dependencies do not work, sorry.';
+        die "$thing '$name': ArrayRef dependencies do not work, sorry.";
     } else {
         $args->{dependencies}->{domain} = Bread::Board::Declare::dep('/domain');
     }
@@ -143,9 +154,15 @@ sub _install {
 sub _resolve_isa_classes {
     my ($package, $args) = @_;
 
-    # return if !exists $args->{isa};
-    # $args->{isa} =~ s{\A [+]}{}xms and return;
-    # $args->{isa} = "$package\::$args->{isa}";
+    # warn "resolve isa classes";
+    
+    return if !exists $args->{isa};
+    $args->{isa} =~ s{\A [+]}{}xms
+        or $args->{isa} = "$package\::$args->{isa}";
+    
+    load $args->{isa};
+    
+    # warn "ISA: $args->{isa}";
 }
 
 1;
