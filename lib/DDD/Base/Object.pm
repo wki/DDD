@@ -1,6 +1,9 @@
 package DDD::Base::Object;
 use Moose;
+use MooseX::Storage;
 use namespace::autoclean;
+
+with Storage('format' => 'JSON', 'io' => 'File');
 
 =head1 NAME
 
@@ -9,6 +12,8 @@ DDD::Base::Object - common base class for most DDD objects
 =head1 SYNOPSIS
 
 =head1 DESCRIPTION
+
+applies MooseX::Storage role to every object.
 
 =head1 ATTRIBUTES
 
@@ -29,5 +34,5 @@ it under the same terms as Perl itself.
 
 =cut
 
-__PACKAGE__->meta->make_immutable;
+# __PACKAGE__->meta->make_immutable;
 1;
