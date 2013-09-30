@@ -1,5 +1,9 @@
 This file documents the revision history for Perl extension DDD
 
+0.04  2013-09-30
+        - added MooseX::Storage to Base class
+        - 'isa' given package names are prefixed with Domain package
+
 0.03  2013-04-01
         - changed superclass for Domain classes to DDD::Domain::Super
           in order to allow reasonable defaults to be defined in one place
