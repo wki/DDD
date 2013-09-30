@@ -3,7 +3,7 @@ use Moose;
 use MooseX::Storage;
 use namespace::autoclean;
 
-with Storage('format' => 'JSON', 'io' => 'File');
+with Storage(format => 'JSON', io => 'File');
 
 =head1 NAME
 
@@ -13,7 +13,8 @@ DDD::Base::Object - common base class for most DDD objects
 
 =head1 DESCRIPTION
 
-applies MooseX::Storage role to every object.
+applies MooseX::Storage role to every object magically adding C<pack> and
+C<unpack> methods.
 
 =head1 ATTRIBUTES
 

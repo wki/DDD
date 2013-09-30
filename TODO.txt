@@ -1,42 +1,10 @@
 TODO
 ----
 
-Intelligenter Umgang mit Aggregates/Entities
- - $domain->aggregate_name(42)          --> entspricht ->load(42)
- - $domain->aggregate_name($row_object) --> übernimmt row, setzt id, load_callbacks
- - $domain->aggregate_name({...})       --> übernimmt alles angegebene
- - $domain->aggregate_name(a => 42)     --> übernimmt alles angegebene
+Aggregate, Entity und Value können Events auslösen.
+  --> Dazu ist ein event_publisher notwendig.
 
-Factories zum Erzeugen von xxx
+bestimmte Objekte kennen eine Referenz zu domain.
+  --> irgendwoher muß die kommen.
 
-Einführen von Specifications
-    * is_satisfied($obj): Bool
-
-Idee: kann man eine Specification so erstellen, daß sie sowohl eine Bedingung
-      testet, als auch die Bedingung DBIC-tauglich zurück liefert?
-      --> "me." ==> Aufruf von methoden auf $obj.
-      --> Alternativ: Query auslösen
-
-Notifications innerhalb DDD
- - notifier als Klasse innerhalb der Domain definieren
-   service notifier => ( ... );
-
---- Beispiel Entity
-
-package Entity::Xxx;
-use Moose;
-extends 'DDD::Entity';
-
-sub _resultset_name {
-    'orderlist' 
-}
-sub _handles {
-    qw(
-        :all
-        :columns
-        :primary
-        :relations
-        name_of_method
-        -name_of_method_to_ignore
-    )
-}
+?? finden eines Weges, bestimmte Dinge bei BUILD zu erraten.
