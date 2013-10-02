@@ -24,6 +24,9 @@ sub init_meta {
 
     Moose->init_meta(%args);
 
+    # FIXME: wir brauchen eine Unterscheidung zwischen Domain und Subdomain.
+    #        evtl. gelingt es, diesen Teil in die eigentliche Klasse
+    #        zu packen und alles andere in DDD::Container.
     my $meta = $args{for_class}->meta;
     $meta->superclasses('DDD::Base::Domain');
 
@@ -36,9 +39,10 @@ sub has {
     # this method is curried (!)
     my $package = caller(1);
 
-    # TODO: check lifecycle and add to 'Request' scope List
     if (exists $args{lifecycle} && $args{lifecycle} =~ m{\bRequest\b}xms) {
-        $args{clearer}   = "_clear_$name";
+        $args{lazy}    = 1;
+        $args{clearer} = "_clear_$name";
+        $args{default} = sub { $_[0]->_request_values->{$name} };
     }
 
     if (!exists $args{dependencies} || ref $args{dependencies} eq 'ARRAY') {

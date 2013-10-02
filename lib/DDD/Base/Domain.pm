@@ -2,12 +2,15 @@ package DDD::Base::Domain;
 use Moose;
 use Bread::Board::Declare;
 
+# can not use Role::Domain here because we are a Bread::Board container
+# and 'has' behaves differently here.
 has domain => (
     is       => 'ro',
     block    => sub { $_[1] },
     weak_ref => 1,
 );
 
+# [ { name, object, clearer }, ... ]
 has _request_scoped_attributes => (
     traits  => ['Array'],
     is      => 'ro',
@@ -18,6 +21,13 @@ has _request_scoped_attributes => (
         _all_request_scoped_attributes   => 'elements',
         _nr_of_request_scoped_attributes => 'count',
     },
+);
+
+# set by prepare: holds values for immediately following request
+has _request_values => (
+    is      => 'rw',
+    isa     => 'HashRef',
+    default => sub { +{} },
 );
 
 after BUILD => sub {
@@ -41,6 +51,14 @@ after BUILD => sub {
     }
 };
 
+# prepare per-request attributes into a special hashref for lazy builders
+sub prepare {
+    my ($self, $values) = @_;
+    
+    $self->_request_values($values);
+}
+
+# clean per-request attributes
 sub cleanup {
     my $self = shift;
 

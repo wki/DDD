@@ -1,0 +1,31 @@
+Benutzung
+---------
+
+1) Domain
+
+Es darf beliebig viele Domains in einer Applikation geben.
+Jeder Domain ist ein Singleton (via MooseX::Singleton).
+
+Initialisierung:
+    MyApp::Domain->initialize(%args);
+    my $d = MyApp::Domain->instance;
+    if ($class->isa('DDD::Base::Domain')) { ... }
+
+
+2) Domain Objekte
+
+Alle Domain-Klassen müssen einen Namensraum _innerhalb_ der Domain besitzen.
+Jedes Domain Objekt kennt $self->domain.
+Wird lazy ermittelt. (siehe isa-test oben, dann $class->instance)
+
+
+
+
+
+X) nette Features -- TODO
+
+$self->domain->foo() geht immer.
+
+$self->foo()  als shortcut wäre nett.
+    Wie erweitern wir die Domain-Rolle dynamisch?
+

@@ -1,39 +1,38 @@
-# ABSTRACT: a simple example domain
-
 package Vanilla;
 use DDD::Domain;
-use Vanilla::Sales; # Subdomain
 
-# auto-generated: 'domain' attribute
+# ABSTRACT: a simple example domain
 
-# a regular Moose attribute
 has schema => (
     is  => 'ro',
     isa => 'DBIx::Class::Schema',
 );
 
-# a request-scoped attr
+has log => (
+    is => 'ro',
+    isa => 'Object',
+);
+
+# a request-scoped attr. Caution: 'default' is injected automatically
 has user => (
     is        => 'ro',
-    isa       => 'Object',
+    isa       => 'Maybe[Str]',
     lifecycle => '+DDD::LifeCycle::Request', # or 'Request' if OX is installed
 );
 
-# TODO: has storage
-
 service some_service => (
-    isa          => 'Vanilla::SomeService',
+    isa          => 'SomeService',
     dependencies => {
         schema => dep('/schema'),
     },
 );
 
 subdomain sales => (
-    isa => 'Vanilla::Sales', # FIXME: can we auto-require?
+    isa => 'Sales',
 );
 
-# factory foo_generator => ( isa => 'Vanilla::FooGenerator' );
+# factory foo_generator => ( isa => 'FooGenerator' );
 
-# repository foo_storage => ( isa => 'Vanilla::FooStorage' );
+# repository all_foo => ( isa => 'AllFoo' );
 
 1;

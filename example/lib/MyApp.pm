@@ -42,10 +42,9 @@ __PACKAGE__->config(
 
     'Model::Vanilla' => {
     },
-    
-    'Model::Vanilla2' => {
-    },
 );
+
+sub user { return $$ };
 
 # Start the application
 __PACKAGE__->setup();

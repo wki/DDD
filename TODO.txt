@@ -7,4 +7,9 @@ Aggregate, Entity und Value können Events auslösen.
 bestimmte Objekte kennen eine Referenz zu domain.
   --> irgendwoher muß die kommen.
 
-?? finden eines Weges, bestimmte Dinge bei BUILD zu erraten.
+---
+
+Catalyst-Model:
+   ->cleanup() nach Request, DONE
+   ->prepare(\%request_scoped) vor Request, TODO
+

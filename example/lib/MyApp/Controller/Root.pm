@@ -31,12 +31,12 @@ The root page (/)
 sub index :Path :Args(0) {
     my ( $self, $c ) = @_;
 
-    # Hello World
-    # $c->response->body( $c->welcome_message );
+    my $vanilla = $c->model('Vanilla');
     
-    my $vanilla = $c->model('Vanilla2');
+    # alternative:
+    # my $subdomain = $c->model(Vanilla => 'subdomain'),
     
-    $c->response->body("hello world, vanilla=$vanilla\n");
+    $c->response->body("hello world ($$), vanilla=$vanilla, vanilla->log=${\$vanilla->log}, vanilla->user=${\$vanilla->user}\n");
 }
 
 =head2 default
