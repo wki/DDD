@@ -2,18 +2,9 @@ use strict;
 use warnings;
 use DateTime;
 use Test::More;
+use Test::MockDateTime;
 
 use ok 'DDD::Event';
-
-my $fake_date_time = DateTime->new(
-    year => 2010,
-    month => 12,
-    day => 11,
-    hour => 14,
-    time_zone => 'local',
-);
-no warnings 'redefine';
-local *DateTime::now = sub { $fake_date_time->clone };
 
 {
     package E;
@@ -21,10 +12,16 @@ local *DateTime::now = sub { $fake_date_time->clone };
     extends 'DDD::Event';
 }
 
-my $e = E->new;
+on '2010-12-11 14:02:04' => sub {
+    my $e = E->new;
+    
+    is $e->occured_on->ymd, 
+        '2010-12-11',
+        'occured on date';
 
-is DateTime::compare($e->occured_on, $fake_date_time), 
-    0,
-    'occured_on is set';
+    is $e->occured_on->hms, 
+        '14:02:04',
+        'occured on time';
+};
 
 done_testing;

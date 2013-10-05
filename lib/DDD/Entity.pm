@@ -2,14 +2,7 @@ package DDD::Entity;
 use Moose;
 use namespace::autoclean;
 
-### sub id; # implemented below, forward defined to satisfy with '...Result'
-### sub _resultset_name { die 'no resultset defined' };
-### sub _handles { ':all' };
-
 extends 'DDD::Base::EventEmitter';
-
-# with 'DDD::Role::DBIC::Schema';
-# with 'DDD::Role::DBIC::Result';
 
 =head1 NAME
 
@@ -22,16 +15,7 @@ DDD::Entity - base class for an entity
     
     extends 'DDD::Entity';
     
-    ### NO! -- Role DBIC::Result is switched off
-    ### # specify the resultset to fetch Records from
-    ### sub _resultset_name { 'FooBar' }
-    ### 
-    ### # auto-define methods inside the Entity class to access Result methods
-    ### # just like 'handles' directive in attribute definitions
-    ### #
-    ### # allowed keywords:
-    ### # :primary, :columns, :methods, :all, name, -not_name
-    ### sub _handles { ':all' }
+    # define methods.
     
     1;
 
@@ -57,6 +41,20 @@ has id => (
 =head1 METHODS
 
 =cut
+
+=head2 is_equal ( $entity )
+
+returns a true value if the entity equals the given entity
+
+=cut
+
+sub is_equal {
+    my ($self, $other_entity) = @_;
+    
+    return if ref $self ne ref $other_entity;
+    
+    return $self->id eq $other_entity->id;
+}
 
 =head1 AUTHOR
 
