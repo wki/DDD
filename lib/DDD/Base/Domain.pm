@@ -1,14 +1,8 @@
 package DDD::Base::Domain;
+use 5.010;
 use Moose;
-use Bread::Board::Declare;
 
-# can not use Role::Domain here because we are a Bread::Board container
-# and 'has' behaves differently here.
-has domain => (
-    is       => 'ro',
-    block    => sub { $_[1] },
-    weak_ref => 1,
-);
+extends 'DDD::Base::Container';
 
 # [ { name, object, clearer }, ... ]
 has _request_scoped_attributes => (
@@ -50,6 +44,14 @@ after BUILD => sub {
         );
     }
 };
+
+sub instance {
+    my ($class, @args) = @_;
+    
+    state $object = $class->new(@args);
+    
+    return $object;
+}
 
 # prepare per-request attributes into a special hashref for lazy builders
 sub prepare {

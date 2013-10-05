@@ -42,7 +42,7 @@ sub _construct_method_modifiers {
 
     return if $seen{ref $self}++;
 
-    my %methods = map { ($_ => 1) } $meta->get_method_list;
+    my %methods = map { ($_ => 1) } grep { !m{\A _}xms } $meta->get_method_list;
     delete $methods{$_} for 'meta', $meta->get_attribute_list;
 
     foreach my $method_name (sort keys %methods) {
