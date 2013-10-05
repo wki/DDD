@@ -1,5 +1,9 @@
 This file documents the revision history for Perl extension DDD
 
+      2013-10-05
+        - added SubDomain base class and more tests
+        - Domain is now a singleton
+
 0.04  2013-09-30
         - added MooseX::Storage to Base class
         - 'isa' given package names are prefixed with Domain package
