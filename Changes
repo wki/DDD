@@ -3,6 +3,7 @@ This file documents the revision history for Perl extension DDD
       2013-10-05
         - added SubDomain base class and more tests
         - Domain is now a singleton
+        - Compare methods (is_equal) for entities and values
 
 0.04  2013-09-30
         - added MooseX::Storage to Base class

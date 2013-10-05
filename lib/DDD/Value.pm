@@ -16,7 +16,24 @@ DDD::Entity - base class for a value
 
 =cut
 
+=head2 is_equal ( $value )
 
+returns a true value if the value equals the given value
+
+=cut
+
+sub is_equal {
+    my ($self, $other_value) = @_;
+    
+    return if ref $self ne ref $other_value;
+    
+    # FIXME: not correct if we have more complicated content. Improve!
+    foreach my $attribute ($self->meta->get_attribute_list) {
+        return if ($self->$attribute . '') ne ($other_value->$attribute . '');
+    }
+    
+    return 1;
+}
 
 =head1 AUTHOR
 

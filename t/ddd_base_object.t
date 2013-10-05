@@ -3,6 +3,7 @@ use warnings;
 use Path::Class;
 use JSON;
 use Test::More;
+use Test::MockDateTime;
 
 use ok 'DDD::Base::Object';
 
@@ -48,5 +49,13 @@ note 'store and load';
     isa_ok $x2, 'X';
     is $x2->foo, 'baz', 'unpack: foo is baz';
 }
+
+note 'now';
+on '2012-12-24 17:23:45' => sub {
+    my $x = X->new;
+    
+    is $x->_now->ymd, '2012-12-24', '_now date';
+    is $x->_now->hms, '17:23:45',   '_now time';
+};
 
 done_testing;

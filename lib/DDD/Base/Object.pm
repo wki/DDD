@@ -1,6 +1,7 @@
 package DDD::Base::Object;
 use Moose;
 use MooseX::Storage;
+use DateTime;
 use namespace::autoclean;
 
 with Storage(format => 'JSON', io => 'File');
@@ -23,6 +24,14 @@ C<unpack> methods.
 =head1 METHODS
 
 =cut
+
+=head2 _now
+
+returns now as a DateTime Object
+
+=cut
+
+sub _now { DateTime->now( time_zone => 'local' ) }
 
 =head1 AUTHOR
 

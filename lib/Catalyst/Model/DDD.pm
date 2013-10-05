@@ -79,7 +79,7 @@ sub COMPONENT {
     my $domain_class = delete $merged_config->{domain_class};
     load $domain_class;
 
-    my $domain = $domain_class->new(_resolve_code_refs($merged_config));
+    my $domain = $domain_class->instance(_resolve_code_refs($merged_config));
 
     # ensure we do not initially have per-request things.
     # must be removed, because only the domain knows what is per-request.
