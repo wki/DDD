@@ -3,6 +3,7 @@ use 5.010;
 use Moose;
 
 extends 'DDD::Base::Container';
+with 'DDD::Role::EventPublisher';
 
 # [ { name, object, clearer }, ... ]
 has _request_scoped_attributes => (

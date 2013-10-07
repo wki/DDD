@@ -1,5 +1,6 @@
 use strict;
 use warnings;
+use DateTime;
 use Path::Class;
 use JSON;
 use Test::More;
@@ -16,19 +17,23 @@ use ok 'DDD::Base::Object';
     extends 'DDD::Base::Object';
     
     has foo => (is => 'rw', isa => 'Str');
+    has bar => (is => 'rw', isa => 'DateTime');
 }
 
 note 'serialization';
 {
-    my $x1 = X->new(foo => 'x42');
+    my $x1 = X->new(foo => 'x42', bar => DateTime->from_epoch(epoch => 1381166265));
     
     is_deeply $x1->pack(),
-        { __CLASS__ => 'X-23', foo => 'x42' },
+        { __CLASS__ => 'X-23', foo => 'x42', bar => 1381166265 },
         'pack';
     
-    my $x2 = X->unpack( { __CLASS__ => 'X', foo => 'bar' } );
+    my $x2 = X->unpack( { __CLASS__ => 'X', foo => 'bar', bar => 1381166265 } );
     isa_ok $x2, 'X';
     is $x2->foo, 'bar', 'unpack: foo is bar';
+    is $x2->bar->epoch, 1381166265, 'unpack: bar is back';
+    
+    ### TODO: add tests for Path::Class::  File / Dir
 }
 
 note 'store and load';

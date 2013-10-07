@@ -51,8 +51,15 @@ note 'service object behavior w/o publisher';
         'method',
         'test_method called';
     
-    dies_ok { $s->publishing_method }
-        'calling a publishing method w/o publisher dies';
+    # as we now auto-create a publisher, this test fails.
+    # dies_ok { $s->publishing_method }
+    #     'calling a publishing method w/o publisher dies';
+    
+    # instead, we have a similar behavior as below:
+    $s->publishing_method;
+    is $s->message,
+        'methodpublish',
+        'successfully published';
 }
 
 note 'service object behavior w/ publisher';

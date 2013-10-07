@@ -1,4 +1,5 @@
 package DDD::EventPublisher;
+use 5.010;
 use Moose;
 use namespace::autoclean;
 
@@ -45,6 +46,20 @@ has _event_store => (
 =head1 METHODS
 
 =cut
+
+=head2 instance
+
+implement a singleton
+
+=cut
+
+sub instance {
+    my ($class, @args) = @_;
+
+    state $instance = $class->new(@args);
+
+    return $instance;
+}
 
 =head2 add_listener ( $event, $target, $method )
 

@@ -6,6 +6,25 @@ use namespace::autoclean;
 
 with Storage(format => 'JSON', io => 'File');
 
+MooseX::Storage::Engine->add_custom_type_handler(
+    'DateTime' => (
+        expand   => sub { DateTime->from_epoch( epoch => shift ) },
+        collapse => sub { shift->epoch },
+    )
+);
+MooseX::Storage::Engine->add_custom_type_handler(
+    'Path::Class::File' => (
+        expand   => sub { Path::Class::File->new( shift ) },
+        collapse => sub { shift->stringify },
+    )
+);
+MooseX::Storage::Engine->add_custom_type_handler(
+    'Path::Class::Dir' => (
+        expand   => sub { Path::Class::Dir->new( shift ) },
+        collapse => sub { shift->stringify },
+    ),
+);
+
 =head1 NAME
 
 DDD::Base::Object - common base class for most DDD objects

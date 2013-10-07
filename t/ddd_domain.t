@@ -16,7 +16,10 @@ use ok 'Demo::Domain';
 
 my $schema  = My::Schema->new;
 my $storage = My::Storage->new;
-my $domain  = Demo::Domain->new(schema => $schema, storage => $storage);
+my $domain  = Demo::Domain->new(
+    schema  => $schema,
+    storage => $storage,
+);
 
 # base class assigned by DSL.
 isa_ok $domain, 'DDD::Base::Domain';
