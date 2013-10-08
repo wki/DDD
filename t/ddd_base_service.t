@@ -8,6 +8,14 @@ use ok 'DDD::Base::Service';
     package S;
     use Moose;
     extends 'DDD::Base::Service';
+    
+    # fake DSL-injected things
+    Moose::Util::MetaRole::apply_metaroles(
+        for             => 'S',
+        class_metaroles => {
+            class  => ['DDD::Service::Meta::Role::Class'],
+        },
+    );
 
     has diagnostics => (is => 'rw', isa => 'Str', default => '');
 

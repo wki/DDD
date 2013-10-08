@@ -58,7 +58,7 @@ note 'service object behavior w/o publisher';
     # instead, we have a similar behavior as below:
     $s->publishing_method;
     is $s->message,
-        'methodpublish',
+        'methodpublishcallback',
         'successfully published';
 }
 
