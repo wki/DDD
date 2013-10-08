@@ -1,6 +1,7 @@
 use strict;
 use warnings;
 use Test::More;
+use Test::Exception;
 
 use ok 'DDD::Entity';
 
@@ -15,6 +16,18 @@ use ok 'DDD::Entity';
     use Moose;
     has id  => (is => 'ro', isa => 'Str');
     has bar => (is => 'ro', isa => 'Str');
+}
+
+note 'failing construction';
+{
+    dies_ok { DDD::Entity->new }
+        'constructing a base entity w/o id fails';
+    
+    dies_ok { E->new }
+        'constructing an entity w/o id fails';
+
+    dies_ok { E->new(id => undef) }
+        'constructing an entity w/ undef id fails';
 }
 
 note 'compare';

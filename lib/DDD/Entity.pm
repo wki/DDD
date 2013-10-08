@@ -27,15 +27,15 @@ DDD::Entity - base class for an entity
 
 =head2 id
 
-the primary key of an Entity
+the primary key of an Entity. A required field
 
 =cut
 
 has id => (
-    is        => 'ro',
-    isa       => 'Str',
-    writer    => '_id',
-    predicate => 'has_id',
+    is       => 'ro',
+    isa      => 'Str',
+    # writer   => '_id',
+    required => 1,
 );
 
 =head1 METHODS
