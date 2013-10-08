@@ -1,5 +1,9 @@
 This file documents the revision history for Perl extension DDD
 
+      2013-10-08
+        - remove mutable flag from Service DSL-created packages before
+          mangling them and always leave them immutable afterwards
+
       2013-10-07
         - added EventPublisher role
         - made EventPublisher a singleton

@@ -31,8 +31,13 @@ Behind the scenes, DDD::Base::Service is taken as a super class.
 sub BUILD {
     my $self = shift;
     
+    # allow a Service DSL package to be mutable before we mangle it.
+    $self->meta->make_mutable if $self->meta->is_immutable;
+    
     $self->_construct_method_modifiers;
     $self->_add_event_listeners;
+    
+    $self->meta->make_immutable;
 }
 
 our %seen;
