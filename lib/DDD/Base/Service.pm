@@ -76,7 +76,10 @@ sub _construct_method_modifiers {
 sub _add_event_listeners {
     my $self = shift;
     
-    return if !$self->has_event_publisher;
+    # warn "has_event_publisher: " . ($self->has_event_publisher ? 'YES' : 'NO');
+    
+    # we are lazily building our event publisher...
+    # return if !$self->has_event_publisher;
     
     $self->event_publisher->add_listener(
         $_->{event}, $self, $_->{callback},

@@ -122,6 +122,7 @@ sub process_event {
         
     foreach my $listener ($self->_all_listeners) {
         my ($event, $target, $method) = @$listener{qw(event target method)};
+        # warn "event:$event, event_name:$event_name";
         next if $event && $event ne $event_name;
         
         $target->$method($event_object);
