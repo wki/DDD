@@ -22,6 +22,31 @@ DDD::Service - DSL for Services
 
 =head1 SYNOPSIS
 
+    package MyDomain::Xxx::SomeService;
+    use DDD::Service;
+    
+    # will by set by IoC Container of Domain/Subdomain
+    has whatever => (
+        is  => 'ro',
+        isa => 'Str',
+    );
+    
+    # listen to an event
+    on FooChanged => sub {
+        my ($self, $event) = @_;
+        
+        # process event
+    };
+    
+    # a method callable from outside
+    sub do_something {
+        my ($self, $foo) = @_;
+        
+        # really do something
+    }
+    
+    1;
+
 =head1 DESCRIPTION
 
 =head1 METHODS
