@@ -22,7 +22,7 @@ TODO: write something
 has _listeners => (
     traits  => ['Array'],
     is      => 'rw',
-    isa     => 'ArrayRef',
+    isa     => 'ArrayRef', # of { event, target, method }
     default => sub { [] },
     handles => {
         _add_listener  => 'push',
