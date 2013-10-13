@@ -12,6 +12,9 @@ Moose::Exporter->setup_import_methods(
         'has',
         'service', 'subdomain', 'factory', 'repository'
     ],
+    class_metaroles => {
+        class  => ['DDD::Container::Meta::Role::Class'],
+    },
     also      => [
         # with_meta has precedence over 'also' -- see Moose::Exporter
         'Moose', 'Bread::Board::Declare'
@@ -105,12 +108,12 @@ sub subdomain {
                 my $service = $class->new(name => $name);
                 $self->add_sub_container($service);
 
-                warn "SUBDOMAIN $name = $service";
-
                 return $service;
             }
         }
     );
+    
+    $meta->autoload_subdomain($name);
 }
 
 sub service {
@@ -125,8 +128,10 @@ sub service {
         \%args,
     );
     
-    my $metax = $package->meta->get_attribute($name);
-    warn "installed service '$name' (meta=$metax)";
+    # my $metax = $package->meta->get_attribute($name);
+    # warn "installed service '$name' (meta=$metax)";
+    
+    $meta->autoload_service($name);
 }
 
 sub _install {

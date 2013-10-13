@@ -1,5 +1,7 @@
 package DDD::Base::Domain;
 use 5.010;
+use Try::Tiny;
+use Scalar::Util 'refaddr';
 use Moose;
 
 extends 'DDD::Base::Container';
@@ -7,8 +9,9 @@ with 'DDD::Role::EventPublisher';
 
 # holds various keys for debugging various areas of things happening.
 # valid flags are:
-#   build           - logs the construction process
-#
+#   build           - construction process
+#   subscribe       - subscriptions made to events
+#   process         - processing events
 #
 has _debug => (
     is      => 'rw',
@@ -65,17 +68,8 @@ after BUILD => sub {
     
     my $meta = $self->meta;
     
-    foreach my $service ($meta->get_all_services) {
-        # service-->get();
-        my $can_lifecycle = $service->can('lifecycle') ? 'YES' : 'NO';
-        
-        say "Service: ${\$service->associated_attribute->name} = $service ",
-            "can lifecycle: $can_lifecycle";
-        
-    }
-    # warn join(' ', $meta->get_all_services);
-    
-    
+    # FIXME: ugly test condition -- use different base classes!!!
+    $self->autoload if ref($self) =~ m{::Domain \z}xms;
     
     foreach my $a ($meta->get_all_attributes) {
         next if !$a->can('lifecycle');
@@ -99,6 +93,27 @@ after BUILD => sub {
 
     $self->log_debug(build => 'finished building domain object');
 };
+
+sub autoload {
+    my $self = shift;
+
+    my $meta = $self->meta;
+
+    foreach my $subdomain (@{$meta->autoload_subdomains}) {
+        $self->log_debug(build => "autoload subdomain: ${\ref $self} $subdomain");
+        $self->$subdomain->autoload;
+    }
+    
+    foreach my $service (@{$meta->autoload_services}) {
+        $self->log_debug("autoload service: ${\ref $self} $service");
+        try { 
+            $self->$service;
+        } catch {
+            s{\n.*\z}{...}xms;
+            die "died: $_";
+        };
+    }
+}
 
 sub log_debug {
     my ($self, $area, $message) = @_;

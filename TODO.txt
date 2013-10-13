@@ -7,6 +7,9 @@ TODO
 
 - Services müssen inistantiiert werden, damit sie auf events lauschen
 
+- korrekt Aufteilen von DDD::Base::Domain / SubDomain
+  und DDD::Domain vs. DDD::SubDomain
+
 ---
 
 Catalyst-Model:

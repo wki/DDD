@@ -72,7 +72,7 @@ adds the target object as a listener wanting to capture a given event.
 sub add_listener {
     my ($self, $event, $target, $method) = @_;
     
-    $self->log_debug(subscribe => "Adding listener: e=$event, t=${\ref $target}, m=$method");
+    $self->log_debug(subscribe => "Adding listener: $event ==> ${\ref $target}($method)");
     $self->_add_listener(
         { target => $target, event => $event, method => $method }
     );
@@ -107,7 +107,6 @@ sub process_events {
     my $self = shift;
     
     while (my $event = $self->_next_event) {
-        warn "processing: $event";
         $self->process_event($event);
     }
 }
@@ -129,6 +128,8 @@ sub process_event {
         # warn "event:$event, event_name:$event_name";
         next if $event && $event ne $event_name;
         
+        $self->log_debug(process => "$event_name -> ${\ref $target}($method)");
+
         $target->$method($event_object);
     }
 }
