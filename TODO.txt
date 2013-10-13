@@ -1,11 +1,11 @@
 TODO
 ----
 
-Aggregate, Entity und Value können Events auslösen.
-  --> Dazu ist ein event_publisher notwendig.
+- Verbessern des Zugriffs auf ->domain
 
-bestimmte Objekte kennen eine Referenz zu domain.
-  --> irgendwoher muß die kommen.
+- EventPublisher ist hart codiert
+
+- Services müssen inistantiiert werden, damit sie auf events lauschen
 
 ---
 
