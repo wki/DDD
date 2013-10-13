@@ -3,6 +3,8 @@ use 5.010;
 use Moose;
 use namespace::autoclean;
 
+with 'DDD::Role::Domain';
+
 =head1 NAME
 
 DDD::EventPublisher - a simple PubSub implementation
@@ -70,6 +72,7 @@ adds the target object as a listener wanting to capture a given event.
 sub add_listener {
     my ($self, $event, $target, $method) = @_;
     
+    $self->log_debug(subscribe => "Adding listener: e=$event, t=${\ref $target}, m=$method");
     $self->_add_listener(
         { target => $target, event => $event, method => $method }
     );
@@ -104,6 +107,7 @@ sub process_events {
     my $self = shift;
     
     while (my $event = $self->_next_event) {
+        warn "processing: $event";
         $self->process_event($event);
     }
 }

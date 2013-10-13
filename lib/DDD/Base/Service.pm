@@ -38,6 +38,8 @@ sub BUILD {
     $self->_add_event_listeners;
     
     $self->meta->make_immutable;
+    
+    $self->log_debug(build => "service ${\ref $self}");
 }
 
 our %seen;
@@ -62,8 +64,10 @@ sub _construct_method_modifiers {
 
                 # FIXME: does a warning make sense if events are expected
                 #        but no eventpublisher is present?
-                $self->process_events
-                    if $self->has_event_publisher;
+                
+                $self->process_events;
+                    # due to lazy loading this currently fails
+                    # if $self->has_event_publisher;
 
                 $self->_leave_method($method_name);
 

@@ -5,6 +5,17 @@ use Moose;
 extends 'DDD::Base::Container';
 with 'DDD::Role::EventPublisher';
 
+# holds various keys for debugging various areas of things happening.
+# valid flags are:
+#   build           - logs the construction process
+#
+#
+has _debug => (
+    is      => 'rw',
+    isa     => 'HashRef',
+    default => sub { +{} },
+);
+
 # [ { name, object, clearer }, ... ]
 has _request_scoped_attributes => (
     traits  => ['Array'],
@@ -25,16 +36,57 @@ has _request_values => (
     default => sub { +{} },
 );
 
+around BUILDARGS => sub {
+    my $orig = shift;
+    my $class = shift;
+    
+    my %args = @_;
+    if (exists $args{_debug}) {
+        my $debug_options = $args{_debug};
+        
+        if (!ref $debug_options) {
+            $args{_debug} = {
+                map { ($_ => 1) } 
+                split qr{\s+}xms, $debug_options
+            };
+        } elsif (ref $debug_options eq 'ARRAY') {
+            $args{_debug} = {
+                map { ($_ => 1) } 
+                @$debug_options
+            };
+        }
+    }
+    
+    $class->$orig(%args);
+};
+
 after BUILD => sub {
     my $self = shift;
     
-    foreach my $a ($self->meta->get_all_attributes) {
+    my $meta = $self->meta;
+    
+    foreach my $service ($meta->get_all_services) {
+        # service-->get();
+        my $can_lifecycle = $service->can('lifecycle') ? 'YES' : 'NO';
+        
+        say "Service: ${\$service->associated_attribute->name} = $service ",
+            "can lifecycle: $can_lifecycle";
+        
+    }
+    # warn join(' ', $meta->get_all_services);
+    
+    
+    
+    foreach my $a ($meta->get_all_attributes) {
         next if !$a->can('lifecycle');
         my $lifecycle = $a->lifecycle;
         next if !$lifecycle;
+        
         next if $lifecycle !~ m{\b Request \b}xms;
         
-        warn "Adding lifecycle: $lifecycle name=${\$a->name} [self=$self]";
+        $self->log_debug(
+            build => "Adding lifecycle: $lifecycle name=${\$a->name}"
+        );
         
         $self->_add_request_scoped_attribute(
             {
@@ -44,7 +96,17 @@ after BUILD => sub {
             },
         );
     }
+
+    $self->log_debug(build => 'finished building domain object');
 };
+
+sub log_debug {
+    my ($self, $area, $message) = @_;
+    
+    return if $area && !exists $self->_debug->{$area};
+    
+    say "DEBUG [$area]: $message";
+}
 
 sub instance {
     my ($class, @args) = @_;
@@ -58,6 +120,7 @@ sub instance {
 sub prepare {
     my ($self, $values) = @_;
     
+    $self->log_debug(build => 'prepare request attributes');
     $self->_request_values($values);
 }
 
@@ -65,8 +128,7 @@ sub prepare {
 sub cleanup {
     my $self = shift;
 
-    warn "about to cleanup request-scoped things (${\$self->_nr_of_request_scoped_attributes})";
-
+    $self->log_debug(build => 'cleanup request attributes');
     foreach my $a ($self->_all_request_scoped_attributes) {
         my $object  = $a->{object};
         my $clearer = $a->{clearer};

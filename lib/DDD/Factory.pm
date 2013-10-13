@@ -5,6 +5,12 @@ use namespace::autoclean;
 extends 'DDD::Base::Object';
 with 'DDD::Role::Domain';
 
+sub BUILD {
+    my $self = shift;
+    
+    $self->log_debug(build => "factory ${\ref $self}");
+}
+
 =head1 NAME
 
 DDD::Factory - base class for a factory

@@ -9,6 +9,9 @@ has domain => (
     isa        => 'Object', # 'DDD::Base::Domain' ?
     weak_ref   => 1,
     lazy_build => 1,
+    handles    => [ 
+        'log_debug'
+    ],
 );
 
 # assume that all classes inside a domain reside in a child-namespace

@@ -33,7 +33,7 @@ has event_publisher => (
 sub _build_event_publisher {
     my $self = shift;
     
-    return DDD::EventPublisher->instance;
+    return DDD::EventPublisher->instance(domain => $self->domain);
 }
 
 =head1 METHODS

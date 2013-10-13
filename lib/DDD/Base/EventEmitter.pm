@@ -13,25 +13,11 @@ DDD::Base::EventEmitter - Base class for all event emitting objects
 
 =head1 DESCRIPTION
 
+see Role::EventPublisher
+
 =head1 ATTRIBUTES
 
 =cut
-
-# has event_publisher => (
-#     is         => 'ro',
-#     isa        => 'DDD::EventPublisher',
-#     predicate  => 'has_event_publisher',
-#     # lazy_build => 1,
-#     handles    => [
-#         'publish', 'process_events',
-#     ],
-# );
-# 
-# # sub _build_event_publisher {
-# #     my $self = shift;
-# #     
-# #     # how can we guess?
-# # }
 
 =head1 METHODS
 

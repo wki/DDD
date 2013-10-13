@@ -4,6 +4,24 @@ use Bread::Board::Declare;
 use Scalar::Util 'refaddr';
 use namespace::autoclean;
 
+# does not work. $self always points to Domain.
+# after BUILD => sub {
+#     my $self = shift;
+#     
+#     foreach my $a ($self->meta->get_all_attributes) {
+#         next if !$a->can('lifecycle');
+#         my $lifecycle = $a->lifecycle;
+#         my $name = $a->name;
+#         next if !$lifecycle;
+#         
+#         next if $lifecycle !~ m{\b Singleton \b}xms;
+#         
+#         $self->log_debug(build => "initialize Singleton ${\ref $self} $name");
+#         
+#         # $self->$name();
+#     }
+# };
+
 # use Bread::Board::Declare;
 # can not use Role::Domain here because we are a Bread::Board container
 # and 'has' behaves differently here.

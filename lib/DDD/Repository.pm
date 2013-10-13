@@ -5,6 +5,12 @@ use namespace::autoclean;
 extends 'DDD::Base::Object';
 with 'DDD::Role::Domain';
 
+sub BUILD {
+    my $self = shift;
+    
+    $self->log_debug(build => "repository ${\ref $self}");
+}
+
 =head1 NAME
 
 DDD::Repository - base class for a repository

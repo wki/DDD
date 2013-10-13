@@ -105,6 +105,8 @@ sub subdomain {
                 my $service = $class->new(name => $name);
                 $self->add_sub_container($service);
 
+                warn "SUBDOMAIN $name = $service";
+
                 return $service;
             }
         }
@@ -122,6 +124,9 @@ sub service {
         $meta, $name,
         \%args,
     );
+    
+    my $metax = $package->meta->get_attribute($name);
+    warn "installed service '$name' (meta=$metax)";
 }
 
 sub _install {
@@ -129,7 +134,7 @@ sub _install {
 
     # this method is curried (!)
     my $package = caller(2);
-
+    
     # _resolve_isa_classes($package, $args);
 
     # name attribute as a service
@@ -158,15 +163,11 @@ sub _install {
 sub _resolve_isa_classes {
     my ($package, $args) = @_;
 
-    # warn "resolve isa classes";
-
     return if !exists $args->{isa};
     $args->{isa} =~ s{\A [+]}{}xms
         or $args->{isa} = "$package\::$args->{isa}";
 
     load $args->{isa};
-
-    # warn "ISA: $args->{isa}";
 }
 
 1;
