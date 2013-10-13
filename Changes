@@ -1,5 +1,11 @@
 This file documents the revision history for Perl extension DDD
 
+0.05  2013-10-13
+        - fixed auto assigning 'domain' attribute for subdomains
+        - added subdomain, repository and factory to tests
+        - changed constructor for domain object in tests to ->instance()
+        - use aliased during tests
+
       2013-10-08
         - remove mutable flag from Service DSL-created packages before
           mangling them and always leave them immutable afterwards

@@ -1,6 +1,6 @@
 package Demo::Domain::TestService;
 use DDD::Service;
-use Demo::Domain::SomethingHappened;
+use aliased 'Demo::Domain::SomethingHappened';
 
 has schema  => (is => 'ro', isa => 'Object');
 has storage => (is => 'ro', isa => 'Object');
@@ -28,7 +28,7 @@ sub publishing_method {
     
     $self->message($self->message . 'pub');
     
-    $self->publish(Demo::Domain::SomethingHappened->new(thing => 'xxx'));
+    $self->publish(SomethingHappened->new(thing => 'xxx'));
     
     $self->message($self->message . 'lish');
 }

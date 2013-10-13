@@ -5,7 +5,7 @@ use Carp;
 use Sub::Install;
 use Module::Load;
 use Bread::Board::Declare ();
-use Bread::Board::ConstructorInjection (); # be save it is loaded.
+use Bread::Board::ConstructorInjection (); # make sure it is loaded.
 
 Moose::Exporter->setup_import_methods(
     with_meta => [
@@ -91,7 +91,7 @@ sub subdomain {
     # TODO: does prefixing the $name with $package make sense?
     my $package = caller(1);
     _resolve_isa_classes($package, \%args);
-    
+
     my $class = $args{isa};
 
     _install(
@@ -116,7 +116,7 @@ sub service {
 
     my $package = caller(1);
     _resolve_isa_classes($package, \%args);
-    
+
     _install(
         'service',
         $meta, $name,
@@ -159,13 +159,13 @@ sub _resolve_isa_classes {
     my ($package, $args) = @_;
 
     # warn "resolve isa classes";
-    
+
     return if !exists $args->{isa};
     $args->{isa} =~ s{\A [+]}{}xms
         or $args->{isa} = "$package\::$args->{isa}";
-    
+
     load $args->{isa};
-    
+
     # warn "ISA: $args->{isa}";
 }
 
