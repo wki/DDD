@@ -37,26 +37,32 @@ Catalyst::Model::DDD        Catalyst Model for a domain
 
 * DSL-Classes: just one use-statement, nothing else
 
-Domain DSL -- keywords:
-  * application == Bread::Board container
-  * subdomain   == Bread::Board container
-  * service     == object, needs domain
-  * factory     == object, maybe without domain
-  * repository  == object, maybe without domain
-  * aggregate   == just a class, instantiated via new() when needed
+Domain DSL -- keywords [meta role(s)]:
+  * application == Bread::Board container [Domain]
+  * subdomain   == Bread::Board container [Domain, Children]
+  * service     == object, needs domain [Domain, Subscribe]
+  * factory     == object, maybe without domain []
+  * repository  == object, maybe without domain []
+  * aggregate   == nothing special, but [Domain]
 
 Idee: 
-  * DDD::Meta::Role::ContainerClass (maintain service + subdomains)
-  * DDD::Meta::Role::ServiceClass (maintain subscribed events)
-  * DDD::Meta::Role::DomainRelation (keep domain object)
+  * DDD::Meta::Role::Class::Children  -- maintain service + subdomains
+  * DDD::Meta::Role::Class::Subscribe -- maintain subscribed events
+  * DDD::Meta::Role::Class::Domain    -- keep domain object
 
 ----
 
-Relations to 'domain' exist at
-  * Application             --> must access subdomains and things inside
-  * Domain, Subdomain       --> handle 'domain' to things
-  * Factory, Repository     --> really needed?
-  * Service                 --> to subscribe
-  * Aggregate               --> to publish
- (* Entity                  --> to publish -- is Aggregate sufficient?)
+Relations to 'domain' exist for
+  * Domain      --> knows itself
+  * Application --> must access domain and its inside
+  * Subdomain   --> handle 'domain' to things
+  * Service     --> to subscribe
+  * Aggregate   --> to publish
+
+No relationship to 'domain' for
+  * Factory
+  * Repository
+  * Entity
+  * Value
+
 
