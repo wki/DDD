@@ -1,9 +1,9 @@
-package DDD::Container::Meta::Role::Class;
+package DDD:::Meta::Role::Class::Container;
 use Moose::Role;
 
 =head1 NAME
 
-DDD::Container::Meta::Role::Class - role for Container Class Meta Object
+DDD:::Meta::Role::Class::Container - role for Container Class Meta Object
 
 =head1 SYNOPSIS
 
@@ -31,8 +31,8 @@ has autoload_services => (
 
 =head2 autoload_containers
 
-holds all names for subdomains to recursively autoload them after domain
-instantiation
+holds all names for subdomains and application to recursively autoload them
+after domain instantiation
 
 =cut
 

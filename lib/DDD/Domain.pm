@@ -23,8 +23,6 @@ DDD::Domain - DSL for creating a Domain class
     
     # subdivide your Domain into subdomains
     subdomain alarm => (
-        # default: 'Alarm',
-        isa => 'Alarm',         # resolves to My::Domain::Alarm
         dependencies => (
             # Bread::Board::Declare dependencies
         ),
@@ -32,8 +30,6 @@ DDD::Domain - DSL for creating a Domain class
     
     # your application services sit here:
     application (
-         # default: 'Application',
-        isa => 'Application',   # resolves to My::Domain::Application
         dependencies => (
             # Bread::Board::Declare dependencies
         ),
@@ -74,7 +70,7 @@ Moose::Exporter->setup_import_methods(
         'application',
     ],
     class_metaroles => {
-        class  => ['DDD::Container::Meta::Role::Class'],
+        class  => ['DDD::Meta::Role::Class::Container'],
     },
     also      => [
         # with_meta has precedence over 'also' -- see Moose::Exporter
@@ -97,6 +93,42 @@ sub init_meta {
     return $meta;
 }
 
+=head1 KEYWORDS
+
+most of the following keywords share a common grammar. Internally all of them
+are services in terms of Bread::Board.
+
+# TODO: describe isa
+
+# TODO: describe dependencies
+
+=cut
+
+=head2 has name => ( ... );
+
+defines a Moose attribute.
+
+=cut
+
+=head2 subdomain name => ( ... );
+
+specify a subdomain. As a result, the subdomain class will get loaded and
+the subdomain initialized as a Bread::Board container. This will recursively
+initialize all things residing inside the subdomain.
+
+=cut
+
+=head2 application ( ... );
+
+specifies the application. Internally, an application is mostly the same as
+a subdomain. The name of the application defaults to C<application>. This
+means that the default class is C<Your::Domain::Application> unless specified
+in a C<isa> directive.
+
+# TODO: Transactions?
+
+=cut
+
 sub application {
     my ($meta, %args) = @_;
     
@@ -106,6 +138,18 @@ sub application {
         \%args
     );
 }
+
+=head2 repository name => ( ... );
+
+=cut
+
+=head2 factory name => ( ... );
+
+=cut
+
+=head2 service name => ( ... );
+
+=cut
 
 1;
 

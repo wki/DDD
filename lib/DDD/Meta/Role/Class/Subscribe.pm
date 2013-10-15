@@ -1,9 +1,10 @@
-package DDD::Service::Meta::Role::Class;
+package DDD:::Meta::Role::Class::Subscribe;
 use Moose::Role;
 
 =head1 NAME
 
-DDD::Service::Meta::Role::Class - role for the Service Class Meta Object
+DDD:::Meta::Role::Class::Subscribe - role for the Service and Subdomain Class
+Meta Object
 
 =head1 SYNOPSIS
 

@@ -46,7 +46,7 @@ Domain DSL -- keywords [meta role(s)]:
   * aggregate   == nothing special, but [Domain]
 
 Idee: 
-  * DDD::Meta::Role::Class::Children  -- maintain service + subdomains
+  * DDD::Meta::Role::Class::Container -- maintain service + subdomains
   * DDD::Meta::Role::Class::Subscribe -- maintain subscribed events
   * DDD::Meta::Role::Class::Domain    -- keep domain object
 

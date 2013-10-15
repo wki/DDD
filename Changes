@@ -1,5 +1,8 @@
 This file documents the revision history for Perl extension DDD
 
+      2013-10-15
+        - started splitting Domain and SubDomain
+
 0.05  2013-10-13
         - fixed auto assigning 'domain' attribute for subdomains
         - added subdomain, repository and factory to tests
