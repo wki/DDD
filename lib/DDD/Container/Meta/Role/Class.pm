@@ -29,14 +29,14 @@ has autoload_services => (
     default => sub { [] },
 );
 
-=head2 autoload_subdomains
+=head2 autoload_containers
 
 holds all names for subdomains to recursively autoload them after domain
 instantiation
 
 =cut
 
-has autoload_subdomains => (
+has autoload_containers => (
     is      => 'ro',
     isa     => 'ArrayRef',
     default => sub { [] },
@@ -56,14 +56,14 @@ sub autoload_service {
     push @{$self->autoload_services}, $name;
 }
 
-=head2 autoload_subdomain ( $name )
+=head2 autoload_container ( $name )
 
 =cut
 
-sub autoload_subdomain {
+sub autoload_container {
     my ($self, $name) = @_;
     
-    push @{$self->autoload_subdomains}, $name;
+    push @{$self->autoload_containers}, $name;
 }
 
 1;

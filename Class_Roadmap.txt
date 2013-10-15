@@ -66,3 +66,27 @@ No relationship to 'domain' for
   * Value
 
 
+Initialization - Timing
+-----------------------
+
+1) package X::Domain --> use DDD::Domain;
+
+    apply DDD::Meta::Role::Class::Children to class X::Domain
+    (maintain services, subdomains)
+
+2) package X::Domain run thru keywords
+
+    keywords: install Bread::Board services
+    
+    for every keyword, a class is loaded
+    --> apply DDD::Meta::* to class
+
+3) X::Domain->new -- actually instance() but new describes better what happens
+
+    create object for Domain
+    
+    autoload subdomains and services
+    --> recursively go thru all subdomains
+    
+    add request_scoped attributes to instance
+

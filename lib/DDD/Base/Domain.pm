@@ -99,7 +99,7 @@ sub autoload {
 
     my $meta = $self->meta;
 
-    foreach my $subdomain (@{$meta->autoload_subdomains}) {
+    foreach my $subdomain (@{$meta->autoload_containers}) {
         $self->log_debug(build => "autoload subdomain: ${\ref $self} $subdomain");
         $self->$subdomain->autoload;
     }
