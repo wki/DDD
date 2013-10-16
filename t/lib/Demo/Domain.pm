@@ -20,11 +20,12 @@ service test_service => (
     },
 );
 
-subdomain part => (
-    isa => 'Part',
-    dependencies => {
-        foo => dep('/storage'),
-    },
-);
+warn 'subdomain currently switched off. must reactivate.';
+# subdomain part => (
+#     isa => 'Part',
+#     dependencies => {
+#         foo => dep('/storage'),
+#     },
+# );
 
 1;

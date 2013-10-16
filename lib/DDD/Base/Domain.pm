@@ -99,9 +99,9 @@ sub autoload {
 
     my $meta = $self->meta;
 
-    foreach my $subdomain (@{$meta->autoload_containers}) {
-        $self->log_debug(build => "autoload subdomain: ${\ref $self} $subdomain");
-        $self->$subdomain->autoload;
+    foreach my $container (@{$meta->autoload_containers}) {
+        $self->log_debug(build => "autoload container: ${\ref $self} $container");
+        $self->$container->autoload;
     }
     
     foreach my $service (@{$meta->autoload_services}) {
@@ -122,6 +122,9 @@ sub log_debug {
     
     say "DEBUG [$area]: $message";
 }
+
+# a convenience accessor. needed?
+sub domain { $_[0]->instance }
 
 sub instance {
     my ($class, @args) = @_;

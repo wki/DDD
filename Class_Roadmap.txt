@@ -37,18 +37,18 @@ Catalyst::Model::DDD        Catalyst Model for a domain
 
 * DSL-Classes: just one use-statement, nothing else
 
-Domain DSL -- keywords [meta role(s)]:
-  * application == Bread::Board container [Domain]
-  * subdomain   == Bread::Board container [Domain, Children]
-  * service     == object, needs domain [Domain, Subscribe]
-  * factory     == object, maybe without domain []
-  * repository  == object, maybe without domain []
-  * aggregate   == nothing special, but [Domain]
+Domain DSL -- keywords [meta role(s)]
+  * application == Bread::Board container []
+  * subdomain   == Bread::Board container [Children]
+  * service     == object [Subscribe]
+  * factory     == object []
+  * repository  == object []
+  * aggregate   == object []
 
 Idee: 
   * DDD::Meta::Role::Class::Container -- maintain service + subdomains
   * DDD::Meta::Role::Class::Subscribe -- maintain subscribed events
-  * DDD::Meta::Role::Class::Domain    -- keep domain object
+  * DDD::Meta::Role::Class::Domain    -- keep domain object in meta
 
 ----
 
@@ -71,8 +71,8 @@ Initialization - Timing
 
 1) package X::Domain --> use DDD::Domain;
 
-    apply DDD::Meta::Role::Class::Children to class X::Domain
-    (maintain services, subdomains)
+    apply DDD::Meta::Role::Class::Container to class X::Domain
+    (maintain services, other containers)
 
 2) package X::Domain run thru keywords
 

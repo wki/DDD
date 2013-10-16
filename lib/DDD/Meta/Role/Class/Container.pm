@@ -1,4 +1,4 @@
-package DDD:::Meta::Role::Class::Container;
+package DDD::Meta::Role::Class::Container;
 use Moose::Role;
 
 =head1 NAME

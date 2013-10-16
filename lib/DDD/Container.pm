@@ -157,6 +157,7 @@ sub _install {
 
     # # name attribute as a service
     # $args->{dependencies} //= {};
+    # 
     # if (ref $args->{dependencies} eq 'ARRAY') {
     #     # FIXME: make this work if possible.
     #     push @{$args->{dependencies}}, 'domain';
@@ -167,7 +168,7 @@ sub _install {
 
     my $class = $args->{isa} //= _camelize($name);
 
-    warn "DDD::Container::$thing $name [$args->{isa}]";
+    warn "DDD::Container::$thing $name [$args->{isa}] ";
 
     Moose::has(
         $meta, $name,
