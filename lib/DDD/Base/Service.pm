@@ -30,15 +30,15 @@ Behind the scenes, DDD::Base::Service is taken as a super class.
 
 sub BUILD {
     my $self = shift;
-    
+
     # allow a Service DSL package to be mutable before we mangle it.
     $self->meta->make_mutable if $self->meta->is_immutable;
-    
+
     $self->_construct_method_modifiers;
     $self->_add_event_listeners;
-    
+
     $self->meta->make_immutable;
-    
+
     $self->log_debug(build => "service ${\ref $self}");
 }
 
@@ -64,10 +64,8 @@ sub _construct_method_modifiers {
 
                 # FIXME: does a warning make sense if events are expected
                 #        but no eventpublisher is present?
-                
+
                 $self->process_events;
-                    # due to lazy loading this currently fails
-                    # if $self->has_event_publisher;
 
                 $self->_leave_method($method_name);
 
@@ -79,12 +77,7 @@ sub _construct_method_modifiers {
 
 sub _add_event_listeners {
     my $self = shift;
-    
-    # warn "has_event_publisher: " . ($self->has_event_publisher ? 'YES' : 'NO');
-    
-    # we are lazily building our event publisher...
-    # return if !$self->has_event_publisher;
-    
+
     $self->event_publisher->add_listener(
         $_->{event}, $self, $_->{callback},
     )

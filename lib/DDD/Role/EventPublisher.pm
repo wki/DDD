@@ -23,7 +23,6 @@ has event_publisher => (
     traits     => [ 'DoNotSerialize' ],
     is         => 'ro',
     isa        => 'DDD::EventPublisher',  ### TODO: make customizable
-    predicate  => 'has_event_publisher',
     lazy_build => 1,
     handles    => [
         'publish', 'process_events',

@@ -1,6 +1,4 @@
-use DDD::EventPublisher;
 use Test::Most;
-
 use FindBin;
 use lib "$FindBin::Bin/lib";
 

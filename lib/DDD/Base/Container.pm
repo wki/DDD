@@ -1,5 +1,6 @@
 package DDD::Base::Container;
 use Moose;
+use Try::Tiny;
 use Bread::Board::Declare;
 use namespace::autoclean;
 
@@ -15,12 +16,12 @@ sub autoload {
 
     foreach my $service (@{$meta->autoload_services}) {
         $self->log_debug("autoload service: ${\ref $self} $service");
-        # try {
-        #     $self->$service;
-        # } catch {
-        #     s{\n.*\z}{...}xms;
-        #     die "died: $_";
-        # };
+        try {
+            $self->$service;
+        } catch {
+            s{\n.*\z}{...}xms;
+            die "died: $_";
+        };
     }
 }
 

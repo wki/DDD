@@ -1,6 +1,4 @@
-use strict;
-use warnings;
-use Test::More;
+use Test::Most;
 
 use ok 'DDD::Event';
 use ok 'DDD::EventPublisher';
@@ -9,7 +7,7 @@ use ok 'DDD::EventPublisher';
     package D;
     use Moose;
     extends 'DDD::Base::Domain';
-
+    
     package X;
     use Moose;
     
@@ -24,7 +22,9 @@ use ok 'DDD::EventPublisher';
         
         $self->status($event);
     }
+}
 
+{
     package E;
     use Moose;
     extends 'DDD::Event';

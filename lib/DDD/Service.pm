@@ -71,9 +71,6 @@ sub init_meta {
 sub on {
     my ($meta, $event_name, $sub) = @_;
     
-    # warn "on '$event_name' [meta=$meta]";
-    
-    # Service Class Metaobject must have the right trait applied
     $meta->subscribe_to($event_name, $sub);
 }
 

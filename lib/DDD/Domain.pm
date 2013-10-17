@@ -1,8 +1,7 @@
 package DDD::Domain;
 use Moose ();
-use Moose::Exporter;
-# use Carp;
-use DDD::Container ();
+use Moose::Exporter ();
+use DDD::Container;
 
 =head1 NAME
 
@@ -134,7 +133,7 @@ sub application {
     
     DDD::Container::_install_container(
         'application',
-        $meta, 'application',
+        $meta, 'app',
         \%args
     );
 }

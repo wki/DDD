@@ -45,7 +45,6 @@ has subscribed_events => (
 sub subscribe_to {
     my ($self, $event, $callback) = @_;
     
-    # warn "subscribe to '$event', [meta=$self]";
     push @{$self->subscribed_events}, { event => $event, callback => $callback };
 }
 

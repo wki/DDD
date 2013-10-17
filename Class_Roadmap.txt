@@ -29,7 +29,6 @@ DDD::Container::Meta::Role::Class   meta role for Domain and Subdomain objects
                                     (maintain service and subdomains)
 DDD::Service::Meta::Role::Class     meta role for Service object
                                     (maintain subscribed events)
-DDD::Service::Meta::Role::Method    meta role for Service method -- obsolete ???
 
 Catalyst::Model::DDD        Catalyst Model for a domain
 

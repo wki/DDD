@@ -1,6 +1,6 @@
 This file documents the revision history for Perl extension DDD
 
-      2013-10-17
+0.06  2013-10-17
         - Domain and Subdomain split is done, tests work again
         - domain attribute is auto-assigned for Domain and handed over
           using dependencies for all other objects

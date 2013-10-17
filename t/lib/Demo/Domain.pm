@@ -27,4 +27,6 @@ subdomain part => (
     },
 );
 
+application;
+
 1;

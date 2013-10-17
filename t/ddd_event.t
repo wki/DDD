@@ -1,7 +1,5 @@
-use strict;
-use warnings;
 use DateTime;
-use Test::More;
+use Test::Most;
 use Test::MockDateTime;
 
 use ok 'DDD::Event';

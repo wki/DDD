@@ -1,30 +1,23 @@
-package DDD::SubDomain;
+package DDD::Application;
 use Moose ();
 use Moose::Exporter;
+# use Carp;
 use DDD::Container ();
 
 =head1 NAME
 
-DDD::SubDomain - DSL for creating a SubDomain class
+DDD::Application - DSL for creating an Application class
 
 =head1 SYNOPSIS
 
     package My::Domain::Alarm;
-    use DDD::SubDomain;
-    
-    # optional attributes -- see Domain
-    
-    repository all_alarms;
-    
-    factory alarm_creator;
+    use DDD::Application;
     
     service alarm_check => (
         dependencies => (
             # Bread::Board::Declare dependencies
         ),
     );
-    
-    aggregate alarm;
 
 =head1 DESCRIPTION
 
@@ -52,7 +45,7 @@ sub init_meta {
     Moose->init_meta(%args);
 
     my $meta = $args{for_class}->meta;
-    $meta->superclasses('DDD::Base::SubDomain');
+    $meta->superclasses('DDD::Base::Application');
 
     return $meta;
 }

@@ -1,9 +1,7 @@
-use strict;
-use warnings;
 use DateTime;
 use Path::Class;
 use JSON;
-use Test::More;
+use Test::Most;
 use Test::MockDateTime;
 
 use ok 'DDD::Base::Object';

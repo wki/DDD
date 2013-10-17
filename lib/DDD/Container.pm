@@ -1,10 +1,8 @@
 package DDD::Container;
 use Moose ();
 use Moose::Exporter;
-use Carp;
 use Module::Load;
 use Bread::Board::Declare ();
-use Bread::Board::ConstructorInjection (); # make sure it is loaded.
 
 =head1 NAME
 
@@ -111,7 +109,6 @@ sub _install_container {
             %$args,
             default => sub {
                 my $self = shift;
-                # warn "NEW subdomain self=$self";
                 
                 # FIXME: what happens at sub-sub domain?????
                 my $service = $class->new(name => $name, domain => $self);
@@ -144,8 +141,6 @@ sub _install {
         $meta, $name,
         is        => 'ro',
         lifecycle => 'Singleton',
-        # default   => $builder,
-        # lazy      => 1,
         %$args,
     );
 }
