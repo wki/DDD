@@ -70,7 +70,9 @@ adds the target object as a listener wanting to capture a given event.
 sub add_listener {
     my ($self, $event, $target, $method) = @_;
     
-    $self->log_debug(subscribe => "Adding listener: $event ==> ${\ref $target}($method)");
+    my $listen_for = $event || '-all-';
+    
+    $self->log_debug(subscribe => "Adding listener: $listen_for ==> ${\ref $target}($method)");
     $self->_add_listener(
         { target => $target, event => $event, method => $method }
     );
