@@ -32,6 +32,12 @@ has _request_scoped_attributes => (
     },
 );
 
+has domain => (
+    is    => 'ro',
+    isa   => 'DDD::Base::Domain',
+    block => sub { $_[1] },
+);
+
 # set by prepare: holds values for immediately following request
 has _request_values => (
     is      => 'rw',
@@ -94,27 +100,6 @@ after BUILD => sub {
     $self->log_debug(build => 'finished building domain object');
 };
 
-sub autoload {
-    my $self = shift;
-
-    my $meta = $self->meta;
-
-    foreach my $container (@{$meta->autoload_containers}) {
-        $self->log_debug(build => "autoload container: ${\ref $self} $container");
-        $self->$container->autoload;
-    }
-    
-    foreach my $service (@{$meta->autoload_services}) {
-        $self->log_debug("autoload service: ${\ref $self} $service");
-        try { 
-            $self->$service;
-        } catch {
-            s{\n.*\z}{...}xms;
-            die "died: $_";
-        };
-    }
-}
-
 sub log_debug {
     my ($self, $area, $message) = @_;
     
@@ -122,9 +107,6 @@ sub log_debug {
     
     say "DEBUG [$area]: $message";
 }
-
-# a convenience accessor. needed?
-sub domain { $_[0]->instance }
 
 sub instance {
     my ($class, @args) = @_;

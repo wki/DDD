@@ -35,9 +35,9 @@ see DDD::Domain
 
 Moose::Exporter->setup_import_methods(
     class_metaroles => {
-        class  => ['DDD::Container::Meta::Role::Class'],
+        class  => ['DDD::Meta::Role::Class::Container'],
     },
-    also      => [
+    also => [
         # with_meta has precedence over 'also' -- see Moose::Exporter
         # the order is also important. DDD::Container must on top
         'DDD::Container',
@@ -59,3 +59,14 @@ sub init_meta {
 }
 
 1;
+
+=head1 AUTHOR
+
+Wolfgang Kinkeldei
+
+=head1 LICENSE
+
+This library is free software. You can redistribute it and/or modify
+it under the same terms as Perl itself.
+
+=cut

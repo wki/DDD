@@ -7,8 +7,7 @@ Moose::Exporter->setup_import_methods(
         'on',
     ],
     class_metaroles => {
-        class  => ['DDD::Service::Meta::Role::Class'],
-        # method => ['DDD::Service::Meta::Role::Method'],
+        class  => ['DDD::Meta::Role::Class::Subscribe'],
     },
     also => [
         # with_meta has precedence over 'also' -- see Moose::Exporter

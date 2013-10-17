@@ -28,22 +28,12 @@ Moose::Exporter->setup_import_methods(
 sub has {
     my ($meta, $name, %args) = @_;
 
-    # this method is curried (!)
-    # my $package = caller(1);
-
     if (exists $args{lifecycle} && $args{lifecycle} =~ m{\bRequest\b}xms) {
+        # see OX::Application -- clearing is much simpler !!!
         $args{lazy}    = 1;
         $args{clearer} = "_clear_$name";
         $args{default} = sub { $_[0]->_request_values->{$name} };
     }
-
-    # if (!exists $args{dependencies} || ref $args{dependencies} eq 'ARRAY') {
-    #     push @{$args{dependencies}}, 'domain';
-    # } else {
-    #     $args{dependencies}->{domain} = Bread::Board::Declare::dep('/domain');
-    # }
-    
-    warn "DDD::Container::has $name";
 
     Moose::has(
         $meta, $name,
@@ -55,9 +45,6 @@ sub has {
 sub factory {
     my ($meta, $name, %args) = @_;
 
-    # my $package = caller(1);
-    # _resolve_isa_classes($package, \%args);
-
     _install(
         'factory',
         $meta, $name,
@@ -67,9 +54,6 @@ sub factory {
 
 sub repository {
     my ($meta, $name, %args) = @_;
-
-    # my $package = caller(1);
-    # _resolve_isa_classes($package, \%args);
 
     _install(
         'repository',
@@ -81,9 +65,6 @@ sub repository {
 sub aggregate {
     my ($meta, $name, %args) = @_;
 
-    # my $package = caller(1);
-    # _resolve_isa_classes($package, \%args);
-
     _install(
         'aggregate',
         $meta, $name,
@@ -93,11 +74,6 @@ sub aggregate {
 
 sub subdomain {
     my ($meta, $name, %args) = @_;
-
-    # TODO: does loading the isa-class make sense?
-    # TODO: does prefixing the $name with $package make sense?
-    # my $package = caller(1);
-    # _resolve_isa_classes($package, \%args);
 
     _install_container(
         'subdomain',
@@ -109,17 +85,11 @@ sub subdomain {
 sub service {
     my ($meta, $name, %args) = @_;
 
-    # my $package = caller(1);
-    # _resolve_isa_classes($package, \%args);
-
     _install(
         'service',
         $meta, $name,
         \%args,
     );
-    
-    # my $metax = $package->meta->get_attribute($name);
-    # warn "installed service '$name' (meta=$metax)";
     
     $meta->autoload_service($name);
 }
@@ -127,7 +97,12 @@ sub service {
 sub _install_container {
     my ($thing, $meta, $name, $args) = @_;
     
-    my $class = $args->{isa} //= _camelize($name);
+    $args->{isa} //= _camelize($name);
+    
+    my $package = caller(2);
+    _resolve_isa_classes($package, $args);
+    
+    my $class = $args->{isa};
     
     _install(
         $thing,
@@ -136,40 +111,35 @@ sub _install_container {
             %$args,
             default => sub {
                 my $self = shift;
-
-                my $service = $class->new(name => $name);
+                # warn "NEW subdomain self=$self";
+                
+                # FIXME: what happens at sub-sub domain?????
+                my $service = $class->new(name => $name, domain => $self);
                 $self->add_sub_container($service);
 
                 return $service;
             }
-        }
+        },
+        $package
     );
     
     $meta->autoload_container($name);
 }
 
 sub _install {
-    my ($thing, $meta, $name, $args) = @_;
-
-    # this method is curried (!)
-    my $package = caller(2);
-    _resolve_isa_classes($package, $args);
-
-    # # name attribute as a service
-    # $args->{dependencies} //= {};
-    # 
-    # if (ref $args->{dependencies} eq 'ARRAY') {
-    #     # FIXME: make this work if possible.
-    #     push @{$args->{dependencies}}, 'domain';
-    #     die "$thing '$name': ArrayRef dependencies do not work, sorry.";
-    # } else {
-    #     $args->{dependencies}->{domain} = Bread::Board::Declare::dep('/domain');
-    # }
+    my ($thing, $meta, $name, $args, $package) = @_;
 
     my $class = $args->{isa} //= _camelize($name);
 
-    warn "DDD::Container::$thing $name [$args->{isa}] ";
+    if (!$package) {
+        # this method is curried (!)
+        $package = caller(2);
+        _resolve_isa_classes($package, $args);
+    }
 
+    $args->{dependencies} //= {};
+    $args->{dependencies}->{domain} = Bread::Board::Declare::dep('/domain');
+    
     Moose::has(
         $meta, $name,
         is        => 'ro',

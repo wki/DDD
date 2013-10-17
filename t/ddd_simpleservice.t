@@ -7,6 +7,7 @@ use lib "$FindBin::Bin/lib";
 {
     package D;
     use Moose;
+    extends 'DDD::Base::Domain';
 }
 
 use ok 'Demo::Domain::SimpleService';

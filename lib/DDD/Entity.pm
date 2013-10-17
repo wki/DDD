@@ -10,12 +10,12 @@ DDD::Entity - base class for an entity
 
 =head1 SYNOPSIS
 
-    package My::Entity::Foo;
+    package My::Foo;
     use Moose;
     
     extends 'DDD::Entity';
     
-    # define methods.
+    # define attributes and methods as usual
     
     1;
 
@@ -27,7 +27,7 @@ DDD::Entity - base class for an entity
 
 =head2 id
 
-the primary key of an Entity. A required field
+the primary key of an Entity. mandatory.
 
 =cut
 

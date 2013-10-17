@@ -11,11 +11,9 @@ DDD::EventPublisher - a simple PubSub implementation
 
 =head1 SYNOPSIS
 
-    # TODO: add example
-
 =head1 DESCRIPTION
 
-TODO: write something
+not needed directly
 
 =head1 ATTRIBUTES
 

@@ -6,6 +6,10 @@ use ok 'DDD::Event';
 use ok 'DDD::EventPublisher';
 
 {
+    package D;
+    use Moose;
+    extends 'DDD::Base::Domain';
+
     package X;
     use Moose;
     
@@ -20,16 +24,14 @@ use ok 'DDD::EventPublisher';
         
         $self->status($event);
     }
-}
 
-{
     package E;
     use Moose;
     extends 'DDD::Event';
 }
 
 my $x = X->new;
-my $publisher = DDD::EventPublisher->new;
+my $publisher = DDD::EventPublisher->new(domain => D->new);
 
 is $publisher->_nr_listeners,
     0,

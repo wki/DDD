@@ -1,5 +1,5 @@
 package Demo::Domain::Part;
-use DDD::Domain; # FIXME: SubDomain?
+use DDD::SubDomain;
 
 has foo => (is => 'ro', isa => 'Object');
 

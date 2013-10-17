@@ -1,8 +1,5 @@
-use strict;
-use warnings;
 use DDD::EventPublisher;
-use Test::More;
-use Test::Exception;
+use Test::Most;
 
 use FindBin;
 use lib "$FindBin::Bin/lib";
@@ -10,6 +7,7 @@ use lib "$FindBin::Bin/lib";
 {
     package D;
     use Moose;
+    extends 'DDD::Base::Domain';
 }
 
 use ok 'Demo::Domain::TestService';
@@ -64,8 +62,8 @@ note 'service object behavior w/o publisher';
 
 note 'service object behavior w/ publisher';
 {
-    my $p = DDD::EventPublisher->new;
     my $domain = D->new;
+    my $p = DDD::EventPublisher->new(domain => $domain);
     my $s = Demo::Domain::TestService->new(
         domain => $domain, 
         event_publisher => $p,

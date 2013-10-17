@@ -12,30 +12,21 @@ DDD::Aggregate - base class for an aggregate
 
 =head1 SYNOPSIS
 
-    package My::Aggregate;
+    # specify an aggregate inside your Domain/Subdomain
+    package My;
+    use DDD::Domain;
+    
+    # isa defaults to My:: followed by the camelized name
+    aggregate 'all_things';
+    
+    
+    # your Aggregate
+    package My::AllThings;
     use Moose;
     
     extends 'DDD::Aggregate';
     
-    # the resultset to read from, mandatory
-    sub resultset_name { 'FooBar' }
-    
-    # an optional part of the aggregate
-    has children => (
-        traits  => ['Array'],
-        is      => 'rw',
-        isa     => 'ArrayRef',
-        handles => { ... }
-    );
-    
-    # optionally define if needed:
-    sub save_children { ... }
-    sub load_children { ... }
-    sub init_children { ... }
-    sub must_satisfy_children { ... }
-    
-    # if row needs check:
-    sub must_satisfy_row { ... }
+    # define load and save methods you need
 
 =head1 DESCRIPTION
 

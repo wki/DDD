@@ -12,15 +12,29 @@ DDD::Event - base class for an event
 =head1 SYNOPSIS
 
     # define an event. Naming: noun + verb in past tense
-    package XXX::ActionHappend;
+    package My::ActionHappend;
     use Moose;
     extends 'DDD::Event';
     
-    # add attributes and methods
+    # add attributes
     
     
     # fire the event somewhere
-    $something->publish(Xxx::ActionHappened->new);
+    package My::Whatever;
+    use aliased 'Xxx::ActionHappened';
+    
+    $something->publish(ActionHappened->new(...));
+    
+    
+    # catch the event inside a service
+    package My::Foo;
+    use 'DDD::Service';
+    
+    on ActionHappened => sub {
+        my ($self, $event) = @_;
+        
+        # ...
+    };
 
 =head1 DESCRIPTION
 
@@ -37,7 +51,7 @@ reflects the timestamp the event was created. Will get set automatically.
 has occured_on => (
     is      => 'ro',
     isa     => 'DateTime',
-    default => sub { DateTime->now(time_zone => 'local') },
+    default => sub { $_[0]->_now },
 );
 
 =head1 METHODS

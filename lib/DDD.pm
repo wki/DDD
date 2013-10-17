@@ -20,12 +20,15 @@ DDD - base classes for DDD models
     );
     
     service file_service => (
-        isa          => 'FileService', 
-        dependencies => [ 'log' ],
+        isa          => 'FileService', # My::Domain::*
+        dependencies => {
+            log => dep('/log')
+        },
     );
     
-    factory thing_builder => (
-        isa => 'ThingBuilder', # My::Domain::*
+    
+    factory 'thing_builder' => (
+        # isa will default to My::Domain::ThingBuilder if omitted
     );
     
     repository all_things => (
@@ -36,7 +39,7 @@ DDD - base classes for DDD models
     );
     
     subdomain measurement => (
-        isa => 'Measurement', # My::Domain::*
+        # isa will default to My::Domain::Measurement if omitted
         dependencies => {
             # reference to global schema
             schema  => dep('/schema'),
@@ -46,13 +49,18 @@ DDD - base classes for DDD models
         },
     );
     
-    # aggregate orderlist => (
-    #     isa          => '+My::Orderlist', # no prefix inserted
-    #     dependencies => [ 'schema', 'log' ],
-    #     parameters   => {
-    #         foo => { isa => 'Int', optional => 1 },
-    #     },
-    # );
+    aggregate orderlist => (
+        isa          => '+My::Orderlist', # no prefix inserted
+        dependencies => [ 'schema', 'log' ],
+        
+        ### TODO: check if we can use parameters!!!
+        # parameters   => {
+        #     foo => { isa => 'Int', optional => 1 },
+        # },
+    );
+    
+    # define an application. isa is My::Domain::Application by default
+    application;
     
     1;
 

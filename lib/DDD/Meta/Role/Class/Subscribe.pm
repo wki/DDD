@@ -1,4 +1,4 @@
-package DDD:::Meta::Role::Class::Subscribe;
+package DDD::Meta::Role::Class::Subscribe;
 use Moose::Role;
 
 =head1 NAME

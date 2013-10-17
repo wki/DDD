@@ -5,6 +5,10 @@ use Test::More;
 use ok 'DDD::Base::Service';
 
 {
+    package D;
+    use Moose;
+    extends 'DDD::Base::Domain';
+    
     package S;
     use Moose;
     extends 'DDD::Base::Service';
@@ -13,7 +17,7 @@ use ok 'DDD::Base::Service';
     Moose::Util::MetaRole::apply_metaroles(
         for             => 'S',
         class_metaroles => {
-            class  => ['DDD::Service::Meta::Role::Class'],
+            class  => ['DDD::Meta::Role::Class::Subscribe'],
         },
     );
 
@@ -40,7 +44,7 @@ use ok 'DDD::Base::Service';
 
 note 'callbacks';
 {
-    my $s = S->new;
+    my $s = S->new(domain => D->new);
 
     is $s->diagnostics,
         '',

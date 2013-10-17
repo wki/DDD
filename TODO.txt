@@ -1,14 +1,9 @@
 TODO
 ----
 
-- Verbessern des Zugriffs auf ->domain
+- Request Scope besser lösen (siehe OX::Application, aber rekursiv!)
 
 - EventPublisher ist hart codiert
-
-- Services müssen inistantiiert werden, damit sie auf events lauschen
-
-- korrekt Aufteilen von DDD::Base::Domain / SubDomain
-  und DDD::Domain vs. DDD::SubDomain
 
 ---
 
