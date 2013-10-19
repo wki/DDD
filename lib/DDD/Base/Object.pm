@@ -8,7 +8,7 @@ with Storage(format => 'JSON', io => 'File');
 
 MooseX::Storage::Engine->add_custom_type_handler(
     'DateTime' => (
-        expand   => sub { DateTime->from_epoch( epoch => shift ) },
+        expand   => sub { DateTime->from_epoch( epoch => shift, time_zone => 'local' ) },
         collapse => sub { shift->epoch },
     )
 );
