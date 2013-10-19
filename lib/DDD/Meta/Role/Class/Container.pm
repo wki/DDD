@@ -42,6 +42,19 @@ has autoload_containers => (
     default => sub { [] },
 );
 
+=head2 prepare_classes
+
+holds all names for classes that have a modified meta class holding the domain
+object
+
+=cut
+
+has prepare_classes => (
+    is      => 'ro',
+    isa     => 'ArrayRef',
+    default => sub { [] },
+);
+
 =head1 METHODS
 
 =cut
@@ -65,6 +78,25 @@ sub autoload_container {
     
     push @{$self->autoload_containers}, $name;
 }
+
+=head2 prepare_class
+
+=cut
+
+sub prepare_class {
+    my ($self, $class) = @_;
+    
+    push @{$self->prepare_classes}, $class;
+}
+
+# # helper: give back the class name this meta object is associated with
+# sub _my_class {
+#     my $self = shift;
+#     
+#     my @classes = $self->class_precedence_list;
+#     
+#     return $classes[0];
+# }
 
 1;
 

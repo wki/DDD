@@ -68,6 +68,8 @@ sub aggregate {
         $meta, $name,
         \%args,
     );
+    
+    $meta->prepare_class($args{isa});
 }
 
 sub subdomain {

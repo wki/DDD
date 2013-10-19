@@ -12,6 +12,8 @@ factory test_factory => (
     isa => 'TestFactory',
 );
 
+aggregate 'something';
+
 service test_service => (
     isa          => 'TestService',
     dependencies => {

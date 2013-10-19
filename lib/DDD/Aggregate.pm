@@ -1,5 +1,6 @@
 package DDD::Aggregate;
-use Moose;
+use DDD::Meta::Trait::Class::Domain;
+use Moose -traits => 'HasDomain';
 use Try::Tiny;
 use namespace::autoclean;
 

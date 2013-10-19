@@ -74,8 +74,7 @@ after BUILD => sub {
     
     my $meta = $self->meta;
     
-    # FIXME: ugly test condition -- use different base classes!!!
-    $self->autoload if ref($self) =~ m{::Domain \z}xms;
+    $self->autoload($self);
     
     foreach my $a ($meta->get_all_attributes) {
         next if !$a->can('lifecycle');
