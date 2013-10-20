@@ -66,4 +66,7 @@ is $publisher->_nr_events,
     'store empty';
 
 
+# TODO: test listen for all events
+# TODO: test remove_listener
+
 done_testing;

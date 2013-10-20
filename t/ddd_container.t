@@ -22,4 +22,6 @@ note '_camelize';
     }
 }
 
+# TODO: test lifecycle
+
 done_testing;

@@ -16,4 +16,6 @@ note 'singleton';
     is $d1, $d2, 'instances are identical';
 }
 
+# TODO: test prepare / cleanup
+
 done_testing;
