@@ -49,45 +49,45 @@ has _request_values => (
 around BUILDARGS => sub {
     my $orig = shift;
     my $class = shift;
-    
+
     my %args = @_;
     if (exists $args{_debug}) {
         my $debug_options = $args{_debug};
-        
+
         if (!ref $debug_options) {
             $args{_debug} = {
-                map { ($_ => 1) } 
+                map { ($_ => 1) }
                 split qr{\s+}xms, $debug_options
             };
         } elsif (ref $debug_options eq 'ARRAY') {
             $args{_debug} = {
-                map { ($_ => 1) } 
+                map { ($_ => 1) }
                 @$debug_options
             };
         }
     }
-    
+
     $class->$orig(%args);
 };
 
 after BUILD => sub {
     my $self = shift;
-    
+
     my $meta = $self->meta;
-    
+
     $self->autoload($self);
-    
+
     foreach my $a ($meta->get_all_attributes) {
         next if !$a->can('lifecycle');
         my $lifecycle = $a->lifecycle;
         next if !$lifecycle;
-        
+
         next if $lifecycle !~ m{\b Request \b}xms;
-        
+
         $self->log_debug(
             build => "Adding lifecycle: $lifecycle name=${\$a->name}"
         );
-        
+
         $self->_add_request_scoped_attribute(
             {
                 object    => $self,
@@ -102,24 +102,24 @@ after BUILD => sub {
 
 sub log_debug {
     my ($self, $area, $message) = @_;
-    
-    return if $area && !exists $self->_debug->{$area};
-    
+
+    return if !exists $self->_debug->{$area // ''};
+
     say "DEBUG [$area]: $message";
 }
 
 sub instance {
     my ($class, @args) = @_;
-    
+
     state $object = $class->new(@args);
-    
+
     return $object;
 }
 
 # prepare per-request attributes into a special hashref for lazy builders
 sub prepare {
     my ($self, $values) = @_;
-    
+
     $self->log_debug(build => 'prepare request attributes');
     $self->_request_values($values);
 }
@@ -129,7 +129,9 @@ sub cleanup {
     my $self = shift;
 
     $self->log_debug(build => 'cleanup request attributes');
-    
+
+    ### FIXME: must become recursive! call cleanup for all subdomains
+
     # stolen from OX::Application
     for my $service_name ($self->get_service_list) {
         my $service = $self->get_service($service_name);
@@ -138,16 +140,6 @@ sub cleanup {
             $service->flush_instance;
         }
     }
-    
-    # foreach my $a ($self->_all_request_scoped_attributes) {
-    #     my $object  = $a->{object};
-    #     my $clearer = $a->{clearer};
-    #     
-    #     use Data::Dumper; $Data::Dumper::Maxdepth = 1; warn Dumper $a;
-    #     warn "want to clear $a via method '$clearer'";
-    #     
-    #     $object->$clearer();
-    # }
 
     # clean up to be sure not to leave secrets of current request
     $self->_request_values({});

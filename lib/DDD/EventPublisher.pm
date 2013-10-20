@@ -28,6 +28,8 @@ has _listeners => (
         _add_listener  => 'push',
         _all_listeners => 'elements',
         _nr_listeners  => 'count',
+        _first_index   => 'first_index',
+        _delete        => 'delete',
     }
 );
 
@@ -87,11 +89,11 @@ removes a listener. Only event and target are evaluated, method is ignored.
 sub remove_listener {
     my ($self, $event, $target) = @_;
     
-    my $index = $self->_listeners->first_index( sub {
+    my $index = $self->_first_index( sub {
         $_->{event} eq $event && $_->{target} eq $target
     });
     
-    $self->_listeners->delete($index) if $index >= 0;
+    $self->_delete($index) if $index >= 0;
 }
 
 =head2 process_events

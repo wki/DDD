@@ -45,7 +45,12 @@ note 'debugging';
         sub { $domain->log_debug(foo => 'bar') },
         '',
         'no output when debugging is disabled';
-    
+
+    stdout_is
+        sub { $domain->log_debug('' => 'bar') },
+        '',
+        'no output when no area is given';
+
     $domain->_debug->{foo} = 1;
     stdout_is
         sub { $domain->log_debug(xxfoo => 'bar') },
