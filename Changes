@@ -1,5 +1,12 @@
 This file documents the revision history for Perl extension DDD
 
+0.07  2013-10-20
+        - reworked request-lifecycle services and attributes
+        - added tests
+        - changed default timezone for reconstituted date values to 'local'
+        - alternate way to hold domain value for regularly created objects
+          like aggregates
+
 0.06  2013-10-17
         - Domain and Subdomain split is done, tests work again
         - domain attribute is auto-assigned for Domain and handed over
