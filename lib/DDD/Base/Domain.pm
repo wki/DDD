@@ -19,6 +19,7 @@ has _debug => (
     default => sub { +{} },
 );
 
+# needed by Catalyst Model to fill hash with proper keys
 # [ { name, object, clearer }, ... ]
 has _request_scoped_attributes => (
     traits  => ['Array'],
@@ -128,12 +129,28 @@ sub cleanup {
     my $self = shift;
 
     $self->log_debug(build => 'cleanup request attributes');
-    foreach my $a ($self->_all_request_scoped_attributes) {
-        my $object  = $a->{object};
-        my $clearer = $a->{clearer};
-        
-        $object->$clearer();
+    
+    # stolen from OX::Application
+    for my $service_name ($self->get_service_list) {
+        my $service = $self->get_service($service_name);
+        if ($service->does('DDD::LifeCycle::Request')) {
+            # warn "Service '$service_name' is Request-Scoped";
+            $service->flush_instance;
+        }
     }
+    
+    # foreach my $a ($self->_all_request_scoped_attributes) {
+    #     my $object  = $a->{object};
+    #     my $clearer = $a->{clearer};
+    #     
+    #     use Data::Dumper; $Data::Dumper::Maxdepth = 1; warn Dumper $a;
+    #     warn "want to clear $a via method '$clearer'";
+    #     
+    #     $object->$clearer();
+    # }
+
+    # clean up to be sure not to leave secrets of current request
+    $self->_request_values({});
 }
 
 1;

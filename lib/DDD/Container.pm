@@ -28,9 +28,11 @@ sub has {
 
     if (exists $args{lifecycle} && $args{lifecycle} =~ m{\bRequest\b}xms) {
         # see OX::Application -- clearing is much simpler !!!
-        $args{lazy}    = 1;
-        $args{clearer} = "_clear_$name";
-        $args{default} = sub { $_[0]->_request_values->{$name} };
+        # $args{lazy}    = 1;
+        # $args{clearer} = "_clear_$name";
+        # $args{default} = sub { $_[0]->_request_values->{$name} };
+        $args{block} = sub { $_[1]->_request_values->{$name} };
+        $args{lifecycle} = '+DDD::LifeCycle::Request';
     }
 
     Moose::has(
@@ -139,10 +141,15 @@ sub _install {
     $args->{dependencies} //= {};
     $args->{dependencies}->{domain} = Bread::Board::Declare::dep('/domain');
     
+    if (exists $args->{lifecycle} && $args->{lifecycle} eq 'Request') {
+        $args->{lifecycle} = '+DDD::LifeCycle::Request';
+    } else {
+        $args->{lifecycle} //= 'Singleton';
+    }
+    
     Moose::has(
         $meta, $name,
         is        => 'ro',
-        lifecycle => 'Singleton',
         %$args,
     );
 }

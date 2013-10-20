@@ -35,14 +35,14 @@ DDD::Aggregate - base class for an aggregate
 
 =cut
 
-sub _run_attribute_hooks {
-    my ($self, $prefix) = @_;
-    
-    foreach my $attribute ($self->meta->get_all_attributes) {
-        my $method = join '_', $prefix, $attribute->name;
-        $self->$method if $self->can($method);
-    }
-}
+# sub _run_attribute_hooks {
+#     my ($self, $prefix) = @_;
+#     
+#     foreach my $attribute ($self->meta->get_all_attributes) {
+#         my $method = join '_', $prefix, $attribute->name;
+#         $self->$method if $self->can($method);
+#     }
+# }
 
 # before save => sub {
 #     my $self = shift;
@@ -68,35 +68,35 @@ sub _run_attribute_hooks {
 #     $self->_run_attribute_hooks('init');
 # };
 
-=head2 must_satisfy
-
-ensure all invariants defined are satisfied or die with a meaningful exception
-
-=cut
-
-sub must_satisfy {
-    my $self = shift;
-    
-    $self->_run_attribute_hooks('must_satisfy');
-}
-
-=head2 is_satisfied
-
-returns a boolean based on a check if invariants are satisfied
-
-=cut
-
-sub is_satisfied {
-    my $self = shift;
-    
-    my $is_satisfied = 0;
-    try {
-        $self->must_satisfy;
-        $is_satisfied = 1;
-    };
-    
-    return $is_satisfied;
-}
+# =head2 must_satisfy
+# 
+# ensure all invariants defined are satisfied or die with a meaningful exception
+# 
+# =cut
+# 
+# sub must_satisfy {
+#     my $self = shift;
+#     
+#     $self->_run_attribute_hooks('must_satisfy');
+# }
+# 
+# =head2 is_satisfied
+# 
+# returns a boolean based on a check if invariants are satisfied
+# 
+# =cut
+# 
+# sub is_satisfied {
+#     my $self = shift;
+#     
+#     my $is_satisfied = 0;
+#     try {
+#         $self->must_satisfy;
+#         $is_satisfied = 1;
+#     };
+#     
+#     return $is_satisfied;
+# }
 
 =head1 AUTHOR
 
