@@ -73,13 +73,13 @@ has per_request_config => (
 
 sub COMPONENT {
     my ($class, $c, $args) = @_;
-
+    
     my $merged_config = $class->merge_config_hashes($class->config, $args);
 
     my $domain_class = delete $merged_config->{domain_class};
     load $domain_class;
 
-    my $domain = $domain_class->instance(_resolve_code_refs($merged_config));
+    my $domain = $domain_class->instance(%{_resolve_code_refs($merged_config)});
 
     # ensure we do not initially have per-request things.
     # must be removed, because only the domain knows what is per-request.
@@ -102,6 +102,7 @@ sub COMPONENT {
     # ACCEPT_CONTEXT, which will then return the domain after having
     # initialized the per-request attributes
     my $self = $class->new(
+        domain_class       => $domain_class,
         domain             => $domain,
         per_request_config => \%per_request_config,
     );
