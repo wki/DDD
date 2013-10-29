@@ -1,9 +1,7 @@
 TODO
 ----
 
-- Aggregate muß domain kennen
-
-- Request Scope besser lösen (siehe OX::Application, aber rekursiv!)
+- Application-Service: transactions
 
 - EventPublisher ist hart codiert
 
