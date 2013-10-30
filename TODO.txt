@@ -3,6 +3,10 @@ TODO
 
 - Application-Service: transactions
 
+    package X;
+    use DDD::Service;
+    with 'DDD::Role::Transaction'; # geht das ?
+
 - EventPublisher ist hart codiert
 
 ---

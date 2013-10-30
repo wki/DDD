@@ -2,22 +2,25 @@
 use 5.010;
 use strict;
 use warnings;
-use FindBin;
-use lib $FindBin::Bin, "$FindBin::Bin/../lib";
+use FindBin; use lib $FindBin::Bin;
 use Basic;
 
+#
 # construct Basic domain
-my $basic = Basic->instance();
+#
+my $basic = Basic->instance(_debug => 'build process subscribe');
 
-# create a new secret and save it
-my $secret = $basic->secret_generator(pssst => 'Hide me');
-$basic->all_secrets->save($secret);
+#
+# use our application service to save a new secret
+#
+$basic->app->keeper->keep_secret(psst => 'Hide me');
 
-# try to retrieve secrets
-foreach my $key (qw(sesame psst)) {
-    my $s = $basic->all_secrets->by_key($key);
-    say "Secret of '$key' = " . ($s ? $s->word : '-unknown-');
-}
+#
+# retrieve the phrase saved
+#
+say 'Phrase is: ', $basic->app->keeper->retrieve_phrase('psst');
+
+
 
 __END__
 
@@ -28,3 +31,7 @@ Idea for Basic Domain:
    Repository "AllSecrets" -- saves/loads Secret into RAM
    Aggregate "Secret"      -- contains word (Str)
    Factory "SecretCreator" -- constructs a Secret
+   Event 
+ - Subdomain: Spy
+   Service 'Watcher'
+

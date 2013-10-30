@@ -65,6 +65,8 @@ around BUILDARGS => sub {
                 @$debug_options
             };
         }
+        
+        say "DEBUG options: " . join ', ', sort keys %{$args{_debug}};
     }
 
     $class->$orig(%args);

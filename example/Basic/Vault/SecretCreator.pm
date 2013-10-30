@@ -1,10 +1,13 @@
-package DDD::TransactionManager;
+package Basic::Vault::SecretCreator;
 use Moose;
+use aliased 'Basic::Vault::Secret';
 use namespace::autoclean;
+
+extends 'DDD::Factory';
 
 =head1 NAME
 
-DDD::TransactionManager - base class for a transaction manager
+Basic::Vault::SecretCreator - a factory creating secrets
 
 =head1 SYNOPSIS
 
@@ -14,29 +17,17 @@ DDD::TransactionManager - base class for a transaction manager
 
 =cut
 
-=head2 begin_transaction
+=head2 new_secret ( $key )
 
-starts a new transaction
-
-=cut
-
-sub begin_transaction {}
-
-=head2 commit
-
-commits a transaction
+creates a new secret from key with an empty phrase
 
 =cut
 
-sub commit {}
-
-=head2 rollback
-
-rolls back a transaction
-
-=cut
-
-sub rollback {}
+sub new_secret {
+    my ($self, $key) = @_;
+    
+    Secret->new(id => $key, phrase => '');
+}
 
 __PACKAGE__->meta->make_immutable;
 1;
