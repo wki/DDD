@@ -22,7 +22,7 @@ observe a secret change and reveil what we received
 on SecretChanged => sub {
     my ($self, $event) = @_;
     
-    sprintf qq{psst: just heard of a secret named "%s" which stores the phrase "%s"\n},
+    printf qq{\n*** psst: just heard of a secret named "%s"\n    which stores the phrase "%s" ***\n\n},
         $event->key,
         $event->phrase;
 };

@@ -6,26 +6,38 @@ Benutzung
 Es darf beliebig viele Domains in einer Applikation geben.
 Jeder Domain ist ein Singleton (via MooseX::Singleton).
 
-Initialisierung:
-    MyApp::Domain->initialize(%args);
-    my $d = MyApp::Domain->instance;
-    if ($class->isa('DDD::Base::Domain')) { ... }
+Benutzung:
+    my $d = MyApp::Domain->instance(%args);
 
 
 2) Domain Objekte
 
-Alle Domain-Klassen müssen einen Namensraum _innerhalb_ der Domain besitzen.
-Jedes Domain Objekt kennt $self->domain.
-Wird lazy ermittelt. (siehe isa-test oben, dann $class->instance)
+Alle Domain-Klassen sollten einen Namensraum innerhalb der Domain besitzen.
+(Fast) jedes Domain Objekt kennt $self->domain.
+
++-------------+------+------------+----------------+------+
+| Art         | DSL? | ->domain() | keyword        | pub  |
++-------------+------+------------+----------------+------+
+| Aggregate   | nein | meta       | aggregate [1]  | ja   |
+| Application | ja   | attribut   | application [2]| nein |
+| Domain      | ja   | attribut   | -              | nein |
+| Entity      | nein | -          | -              | [4]  |
+| Event       | nein | -          | on [3]         | nein |
+| Factory     | nein | attribut   | factory [1]    | nein |
+| Repository  | nein | attribut   | repository [1] | nein |
+| Service     | ja   | attribut   | service [1]    | ja   |
+| SubDomain   | ja   | attribut   | subdomain [1]  | nein |
+| Value       | nein | -          | -              | nein |
++-------------+------+------------+----------------+------+
+| [1] bei Domain, Subdomain     [4] kennt nur Domain nicht!
+| [2] bei Domain                                          
+| [3] bei Service                                         
++----------------------------------------------------------
 
 
+3) Event Handling
 
+Jede Service-Methode (egal ob Domain- oder App-Service) sorgt für
+Event-Abarbeitung.
 
-
-X) nette Features -- TODO
-
-$self->domain->foo() geht immer.
-
-$self->foo()  als shortcut wäre nett.
-    Wie erweitern wir die Domain-Rolle dynamisch?
 

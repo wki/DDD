@@ -49,6 +49,12 @@ has _event_store => (
 
 =cut
 
+after publish => sub {
+    my ($self, $event) = @_;
+    
+    $self->log_debug(publish => ref $event);
+};
+
 =head2 instance
 
 implement a singleton

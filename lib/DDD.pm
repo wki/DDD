@@ -66,6 +66,33 @@ DDD - base classes for DDD models
 
 =head1 DESCRIPTION
 
+=head1 DEBUGGING
+
+to debug what is happening, either set C<<< $ENV{DDD_DEBUG} >>> or
+instantiate a domain object with a C<_debug> attribute containing space
+separeted words. The following words are recognized:
+
+=over
+
+=item build
+
+logs the building phase
+
+=item publish
+
+logs publishing of events
+
+=item subscribe
+
+logs subscribtions for events
+
+=item process
+
+logs message processing
+
+=back
+
+
 =head1 AUTHOR
 
 Wolfgang Kinkeldei

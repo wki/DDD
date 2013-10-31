@@ -3,7 +3,7 @@ use DDD::SubDomain;
 
 =head1 NAME
 
-Basic::Vault - a subdomain keeping secrets
+Basic::Vault - a subdomain keeping and reporting back secret phrases
 
 =head1 SYNOPSIS
 

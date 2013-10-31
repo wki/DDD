@@ -1,20 +1,21 @@
 #!/usr/bin/env perl
 use strict;
 use warnings;
-use FindBin; use lib $FindBin::Bin;
-use Simple;
+use FindBin; 
+use lib $FindBin::Bin;
+use Hello;
 
 #
-# construct Simple domain
+# construct Hello domain
 # arguments are only honored at first call. All subsequent calls
 # will only return the existing singleton object.
 #
-my $simple = Simple->instance(name => $ARGV[0] || 'simple');
+my $hello = Hello->instance(name => 'hello');
 
 #
 # call 'echo' method from 'printer' service
 # the service is constructed automatically and gets 'name' from domain.
 #
-$simple->printer->echo(
-    join(' ', @ARGV[1..$#ARGV]) || 'no text given on command line'
+$hello->printer->echo(
+    join(' ', @ARGV) || 'no text given on command line'
 );

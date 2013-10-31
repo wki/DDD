@@ -9,6 +9,19 @@ TODO
 
 - EventPublisher ist hart codiert
 
+- Role::Domain vs. Role::DomainFromMeta
+  --> kann man das vereinfachen (nur DomainFromMeta)
+  --> und alles deklarativ darstellen
+      bisher: Service, Factory, Repository, Aggregate
+      neu:    Entity
+      niemals:Value, Event
+
+- Beispiel Catalyst App, die "security" mit berücksichtigt. Wie?
+
+- Ungereimtheiten -- ist das schlimm?
+  use DDD::X;           # bei allen DSL-Klassen
+  extends 'DDD::X';     # bei allen "normalen" Klassen
+
 ---
 
 Catalyst-Model:

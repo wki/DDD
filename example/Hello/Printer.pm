@@ -1,18 +1,14 @@
-package Simple::Printer;
+package Hello::Printer;
 use 5.010;
 use DDD::Service;
 
 =head1 NAME
 
-Simple::Printer - a simple printer service
+Hello::Printer - a simple printer service
 
 =head1 SYNOPSIS
 
 =head1 DESCRIPTION
-
-=head1 ATTRIBUTES
-
-=cut
 
 =head1 ATTRIBUTES
 

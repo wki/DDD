@@ -43,17 +43,25 @@ observes save operations and reveils the secrets saved
 
 =head2 Vault
 
+This is the core subdomain which is responsible for managing our secret
+phrases.
+
 =cut
 
 subdomain 'vault';
 
 =head2 Spy
 
+The spy subdomain observes changes for secrets and reveils the secrets. There
+is no direct link betweeen spy and vault, just an event that is observed.
+
 =cut
 
 subdomain 'spy';
 
 =head1 APPLICATION
+
+The application offers the API to the outside world.
 
 =cut
 

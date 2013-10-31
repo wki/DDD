@@ -51,21 +51,12 @@ around BUILDARGS => sub {
     my $class = shift;
 
     my %args = @_;
-    if (exists $args{_debug}) {
-        my $debug_options = $args{_debug};
+    if (my $debug_options = delete $args{_debug} // $ENV{DDD_DEBUG}) {
+        $args{_debug} = {
+            map { ($_ => 1) }
+            split qr{\W+}xms, $debug_options
+        };
 
-        if (!ref $debug_options) {
-            $args{_debug} = {
-                map { ($_ => 1) }
-                split qr{\s+}xms, $debug_options
-            };
-        } elsif (ref $debug_options eq 'ARRAY') {
-            $args{_debug} = {
-                map { ($_ => 1) }
-                @$debug_options
-            };
-        }
-        
         say "DEBUG options: " . join ', ', sort keys %{$args{_debug}};
     }
 

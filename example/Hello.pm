@@ -1,17 +1,17 @@
-package Simple;
+package Hello;
 use DDD::Domain;
 
 =head1 NAME
 
-Simple - a very simple domain without any subdomains
+Hello - a very simple domain without any subdomains
 
 =head1 SYNOPSIS
 
     # construct or access domain
-    my $simple = Simple->instance( name => 'foo' );
+    my $hello = Hello->instance( name => 'hi' );
     
     # access service
-    $simple->printer->echo('hello'); # prints 'foo: hello'
+    $hello->printer->echo('world'); # prints 'hi: world'
 
 =head1 DESCRIPTION
 
@@ -43,7 +43,7 @@ a printer Service
 =cut
 
 service printer => (
-    # isa => 'Simple::Printer', # is default
+    # isa => 'Hello::Printer', # is default
     dependencies => { name => dep('/name') },
 );
 

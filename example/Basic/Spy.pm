@@ -11,6 +11,16 @@ Basic::Spy - a subdomain spying for new secrets
 
 =cut
 
+=head1 SERVICES
+
+=cut
+
+=head2 watcher
+
+=cut
+
+service 'watcher';
+
 __PACKAGE__->meta->make_immutable;
 1;
 
