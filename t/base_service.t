@@ -6,7 +6,9 @@ use ok 'DDD::Base::Service';
     package D;
     use Moose;
     extends 'DDD::Base::Domain';
+}
 
+{
     package S;
     use Moose;
     extends 'DDD::Base::Service';
@@ -42,8 +44,7 @@ use ok 'DDD::Base::Service';
 
 note 'callbacks';
 {
-    my $domain = D->new;
-    my $s = S->new(domain => $domain);
+    my $s = S->new(domain => D->instance);
     
     is $s->diagnostics,
         '',

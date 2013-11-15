@@ -37,8 +37,8 @@ use ok 'DDD::EventPublisher';
 }
 
 my $x = X->new;
-my $d = D->new;
-my $publisher = DDD::EventPublisher->new(domain => $d);
+# my $d = D->new;
+my $publisher = DDD::EventPublisher->new(domain => D->instance);
 
 note 'basic behavior';
 {

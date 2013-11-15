@@ -23,8 +23,7 @@ note 'service class behavior';
 
 note 'service object behavior';
 {
-    my $domain = D->new;
-    my $s = Demo::Domain::SimpleService->new(domain => $domain);
+    my $s = Demo::Domain::SimpleService->new(domain => D->instance);
 
     can_ok $s, 'simple_method', 'all_subscribed_events';
     
