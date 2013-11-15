@@ -6,11 +6,11 @@ use ok 'DDD::Base::Service';
     package D;
     use Moose;
     extends 'DDD::Base::Domain';
-    
+
     package S;
     use Moose;
     extends 'DDD::Base::Service';
-    
+
     # fake DSL-injected things
     Moose::Util::MetaRole::apply_metaroles(
         for             => 'S',
@@ -42,8 +42,9 @@ use ok 'DDD::Base::Service';
 
 note 'callbacks';
 {
-    my $s = S->new(domain => D->new);
-
+    my $domain = D->new;
+    my $s = S->new(domain => $domain);
+    
     is $s->diagnostics,
         '',
         'diagnostics empty';
