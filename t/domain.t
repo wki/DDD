@@ -127,28 +127,28 @@ note 'subdomain';
     is $domain->part->domain, $domain, '->domain reflects domain';
 }
 
-note 'lifecycle';
-{
-    # prepare sets _request_values
-    is_deeply $domain->_request_values, {}, 'empty request values';
-    $domain->prepare( { foo => 'bar42' } );
-    is_deeply $domain->_request_values, { foo => 'bar42' }, 'set request values';
-    
-    # simulate first request, remember service object for comparison
-    my $short_lived1 = $domain->short_lived;
-    isa_ok $short_lived1, 'Demo::Domain::ShortLived';
-    is $short_lived1, $domain->short_lived, 'same instance during request 1';
-    
-    # simulate end of request
-    $domain->cleanup;
-    is_deeply $domain->_request_values, {}, 'cleaned request values';
-    
-    # we must receive an new instance
-    my $short_lived2 = $domain->short_lived;
-    isa_ok $short_lived2, 'Demo::Domain::ShortLived';
-
-    isnt $short_lived1, $short_lived2, 'new instance generated';
-    is $short_lived2, $domain->short_lived, 'same instance during request 2';
-}
+# note 'lifecycle';
+# {
+#     # prepare sets _request_values
+#     is_deeply $domain->_request_values, {}, 'empty request values';
+#     $domain->prepare( { foo => 'bar42' } );
+#     is_deeply $domain->_request_values, { foo => 'bar42' }, 'set request values';
+#     
+#     # simulate first request, remember service object for comparison
+#     my $short_lived1 = $domain->short_lived;
+#     isa_ok $short_lived1, 'Demo::Domain::ShortLived';
+#     is $short_lived1, $domain->short_lived, 'same instance during request 1';
+#     
+#     # simulate end of request
+#     $domain->cleanup;
+#     is_deeply $domain->_request_values, {}, 'cleaned request values';
+#     
+#     # we must receive an new instance
+#     my $short_lived2 = $domain->short_lived;
+#     isa_ok $short_lived2, 'Demo::Domain::ShortLived';
+# 
+#     isnt $short_lived1, $short_lived2, 'new instance generated';
+#     is $short_lived2, $domain->short_lived, 'same instance during request 2';
+# }
 
 done_testing;

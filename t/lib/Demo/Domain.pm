@@ -3,7 +3,7 @@ use DDD::Domain;
 
 has schema   => (is => 'ro', isa => 'Object');
 has storage  => (is => 'ro', isa => 'Object');
-has security => (is => 'ro', isa => 'Str', lifecycle => 'Request');
+has security => (is => 'ro', isa => 'Str', lifecycle => '+DDD::LifeCycle::Request');
 
 repository 'test_repository';
 
@@ -19,9 +19,10 @@ service test_service => (
     },
 );
 
-service short_lived => (
-    lifecycle => 'Request',
-);
+# FIXME: does it make sense to have Request-based services???
+# service short_lived => (
+#     # lifecycle => '+DDD::LifeCycle::Request',
+# );
 
 subdomain part => (
     isa => 'Part',

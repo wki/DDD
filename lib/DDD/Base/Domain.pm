@@ -114,6 +114,7 @@ sub prepare {
     my ($self, $values) = @_;
 
     $self->log_debug(build => 'prepare request attributes');
+    
     $self->_request_values($values);
 }
 
@@ -129,8 +130,10 @@ sub cleanup {
     for my $service_name ($self->get_service_list) {
         my $service = $self->get_service($service_name);
         if ($service->does('DDD::LifeCycle::Request')) {
-            # warn "Service '$service_name' is Request-Scoped";
-            $service->flush_instance;
+            my $clearer = "_clear_$service_name";
+            # warn "Service '$service_name' is Request-Scoped, flushing. Clearer = $clearer";
+            $service->flush_instance; # is not enough
+            $self->$clearer(); # required
         }
     }
 

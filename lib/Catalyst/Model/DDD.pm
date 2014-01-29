@@ -79,7 +79,7 @@ sub COMPONENT {
     my $domain_class = delete $merged_config->{domain_class};
     load $domain_class;
 
-    my $domain = $domain_class->instance(%{_resolve_code_refs($merged_config)});
+    my $domain = $domain_class->instance(%{_resolve_code_refs($c, $merged_config)});
 
     # ensure we do not initially have per-request things.
     # must be removed, because only the domain knows what is per-request.
@@ -115,19 +115,20 @@ sub ACCEPT_CONTEXT {
     my $self = shift;
     my $c    = shift;
 
-    my $resolved_per_request_config = _resolve_code_refs($self->per_request_config);
+    my $resolved_per_request_config = _resolve_code_refs($c, $self->per_request_config);
     $self->domain->prepare($resolved_per_request_config);
 
     return $self->domain;
 }
 
 sub _resolve_code_refs {
+    my $c = shift;
     my $config = shift;
 
     return {
         map {
             my $value = $config->{$_};
-            ($_ => ref $value eq 'CODE' ? $value->() : $value)
+            ($_ => ref $value eq 'CODE' ? $value->($c) : $value)
         }
         keys %$config
     };

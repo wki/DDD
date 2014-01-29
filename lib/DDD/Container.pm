@@ -27,11 +27,8 @@ sub has {
     my ($meta, $name, %args) = @_;
 
     if (exists $args{lifecycle} && $args{lifecycle} =~ m{\bRequest\b}xms) {
-        # see OX::Application -- clearing is much simpler !!!
-        # $args{lazy}    = 1;
-        # $args{clearer} = "_clear_$name";
-        # $args{default} = sub { $_[0]->_request_values->{$name} };
-        $args{block} = sub { $_[1]->_request_values->{$name} };
+        $args{clearer}   = "_clear_$name";
+        $args{block}     = sub { $_[1]->_request_values->{$name} };
         $args{lifecycle} = '+DDD::LifeCycle::Request';
     }
 
