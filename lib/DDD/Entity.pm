@@ -32,10 +32,10 @@ the primary key of an Entity. mandatory.
 =cut
 
 has id => (
-    is       => 'ro',
-    isa      => 'Str',
-    # writer   => '_id',
-    required => 1,
+    is        => 'ro',
+    isa       => 'Str',
+    writer    => '_id',     # a Repository might need to set the ID
+    predicate => 'has_id',
 );
 
 =head1 METHODS
@@ -50,9 +50,10 @@ returns a true value if the entity equals the given entity
 
 sub is_equal {
     my ($self, $other_entity) = @_;
-    
+
     return if ref $self ne ref $other_entity;
-    
+    return if !($self->has_id && $other_entity->has_id);
+
     return $self->id eq $other_entity->id;
 }
 

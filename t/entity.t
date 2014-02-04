@@ -17,11 +17,12 @@ use ok 'DDD::Entity';
 
 note 'failing construction';
 {
-    dies_ok { DDD::Entity->new }
-        'constructing a base entity w/o id fails';
-    
-    dies_ok { E->new }
-        'constructing an entity w/o id fails';
+    # we allow constructing w/o entity
+    # dies_ok { DDD::Entity->new }
+    #     'constructing a base entity w/o id fails';
+    # 
+    # dies_ok { E->new }
+    #     'constructing an entity w/o id fails';
 
     dies_ok { E->new(id => undef) }
         'constructing an entity w/ undef id fails';
@@ -29,10 +30,14 @@ note 'failing construction';
 
 note 'compare';
 {
+    my $nul= E->new;
     my $e1 = E->new(id => 42, bar => 'xxx');
     my $e2 = E->new(id => 42, bar => 'different');
     my $e3 = E->new(id => 43, bar => 'xxx');
     my $f  = F->new(id => 42, bar => 'xxx');
+    
+    ok !$nul->is_equal($e1), 'w/o id is not equal e1';
+    ok !$e1->is_equal($nul), 'e1 is not equal w/o id';
     
     ok $e1->is_equal($e2), 'e1 and e2 have same id';
     ok $e2->is_equal($e1), 'e2 and e1 have same id';
