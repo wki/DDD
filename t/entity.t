@@ -28,6 +28,17 @@ note 'failing construction';
         'constructing an entity w/ undef id fails';
 }
 
+note 'no id';
+{
+    my $e = E->new;
+    
+    ok !$e->has_id, 'no id';
+    
+    $e->_id(4711);
+    ok $e->has_id, 'has id';
+    is $e->id, 4711, 'id';
+}
+
 note 'compare';
 {
     my $nul= E->new;
