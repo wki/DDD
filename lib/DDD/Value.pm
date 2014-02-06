@@ -29,6 +29,8 @@ sub is_equal {
     
     # FIXME: not correct if we have more complicated content. Improve!
     foreach my $attribute ($self->meta->get_attribute_list) {
+        next if substr($attribute,0,1) eq '_';
+        
         return if ($self->$attribute . '') ne ($other_value->$attribute . '');
     }
     
