@@ -52,6 +52,19 @@ returns now as a DateTime Object
 
 sub _now { DateTime->now( time_zone => 'local' ) }
 
+=head2 clone ( \%args | %args )
+
+returns a cloned object with all args overwritten
+
+=cut
+
+sub clone {
+    my $self = shift;
+    my %args = ref $_[0] eq 'HASH' ? %{$_[0]} : @_;
+
+    $self->meta->clone_object($self, %args);
+}
+
 =head1 AUTHOR
 
 Wolfgang Kinkeldei

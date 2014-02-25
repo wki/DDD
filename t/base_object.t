@@ -61,4 +61,19 @@ on '2012-12-24 17:23:45' => sub {
     is $x->_now->hms, '17:23:45',   '_now time';
 };
 
+note 'clone';
+{
+    my $orig = X->new(foo => 'Foo', bar => DateTime->from_epoch(epoch => 1381166265));
+    
+    my $clone = $orig->clone(foo => 'Bar');
+    
+    isnt $orig, $clone, 'clone object';
+    
+    is $orig->foo, 'Foo', 'orig->foo';
+    is $clone->foo, 'Bar', 'clone->foo';
+    
+    is $orig->bar->epoch, 1381166265, 'orig->bar';
+    is $clone->bar->epoch, 1381166265, 'clone->bar';
+}
+
 done_testing;

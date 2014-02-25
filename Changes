@@ -1,5 +1,9 @@
 This file documents the revision history for Perl extension DDD
 
+0.08  2014-02-25
+        - added a clone() method to Base::Object allowing every object
+          to get cloned with updated attributes
+
 0.07  2013-10-20
         - reworked request-lifecycle services and attributes
         - added tests
