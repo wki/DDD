@@ -2,7 +2,11 @@ package DDD::Base::Object;
 use Moose;
 use MooseX::Storage;
 use DateTime;
-use namespace::autoclean;
+use Scalar::Util 'blessed';
+# use namespace::autoclean;
+# use overload
+#     '""' => \&_as_string,
+#     fallback => 1;
 
 with Storage(format => 'JSON', io => 'File');
 
@@ -63,6 +67,25 @@ sub clone {
     my %args = ref $_[0] eq 'HASH' ? %{$_[0]} : @_;
 
     $self->meta->clone_object($self, %args);
+}
+
+=head2 as_string
+
+returns a stringified variant for this object. Overload if special versions
+are wanted.
+
+=cut
+
+sub as_string {
+    my $self = shift;
+    
+    # return "$self" if !$self->can('pack');
+    my $data = $self->pack;
+    
+    join ', ',
+        map { "$_: " . (blessed($data->{$_}) && $data->{$_}->can('as_string') ? $data->{$_}->as_string : "$data->{$_}") }
+        grep { !m{\A _}xms }
+        keys %$data;
 }
 
 =head1 AUTHOR
