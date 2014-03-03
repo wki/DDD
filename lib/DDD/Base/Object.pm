@@ -79,13 +79,58 @@ are wanted.
 sub as_string {
     my $self = shift;
     
-    # return "$self" if !$self->can('pack');
-    my $data = $self->pack;
+    my $class = ref $self;
+    $class =~ s{\A .* ::}{}xms;
     
-    join ', ',
-        map { "$_: " . (blessed($data->{$_}) && $data->{$_}->can('as_string') ? $data->{$_}->as_string : "$data->{$_}") }
-        grep { !m{\A _}xms }
-        keys %$data;
+    my %components = $self->_components;
+    return "[$class: " . join(', ', map { "$_=$components{$_}" } sort keys %components) . ']';
+}
+
+sub diff {
+    my ($self, $other_object) = @_;
+    
+    if (ref $self ne ref $other_object) {
+        return "$self -> $other_object";
+    }
+    
+    my %components   = $self->_components;
+    my %compare_with = $other_object->_components;
+    
+    my %united_keys = (%components, %compare_with);
+    
+    my @output;
+    foreach my $key (sort keys %united_keys) {
+        if (!exists $components{$key}) {
+            push @output, "$key:''->'$compare_with{$key}'";
+        } elsif (!exists $compare_with{$key}) {
+            push @output, "$key:'$components{$key}'->''";
+        } elsif ($components{$key} ne $compare_with{$key}) {
+            push @output, "$key:'$components{$key}'->'$compare_with{$key}'";
+        }
+    }
+    
+    return join ', ', @output;
+}
+
+sub _components {
+    my $self = shift;
+    
+    my @components;
+    foreach my $attribute ($self->meta->get_all_attributes) {
+        next if $attribute->does('MooseX::Storage::Meta::Attribute::Trait::DoNotSerialize');
+        
+        my $name     = $attribute->name;
+        my $accessor = $attribute->accessor;
+        my $value    = $self->$accessor();
+        
+        if (blessed $value && $value->can('as_string')) {
+            $value = $value->as_string;
+        }
+        
+        push @components, $name, "$value";
+    }
+    
+    return @components;
 }
 
 =head1 AUTHOR

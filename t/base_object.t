@@ -14,8 +14,20 @@ use ok 'DDD::Base::Object';
     
     extends 'DDD::Base::Object';
     
-    has foo => (is => 'rw', isa => 'Str');
-    has bar => (is => 'rw', isa => 'DateTime');
+    has foo  => (is => 'rw', isa => 'Str');
+    has bar  => (is => 'rw', isa => 'DateTime');
+    has hide => (traits => ['DoNotSerialize'], is => 'rw', isa => 'Str');
+}
+
+# sample more complex class
+{
+    package Y;
+    use Moose;
+    
+    extends 'DDD::Base::Object';
+    
+    has thing => (is => 'rw', isa => 'X');
+    has name  => (is => 'rw', isa => 'Str');
 }
 
 note 'serialization';
@@ -63,6 +75,7 @@ on '2012-12-24 17:23:45' => sub {
 
 note 'clone';
 {
+    # 1381166265 == 2013-10-07 19:17:45
     my $orig = X->new(foo => 'Foo', bar => DateTime->from_epoch(epoch => 1381166265));
     
     my $clone = $orig->clone(foo => 'Bar');
@@ -75,5 +88,37 @@ note 'clone';
     is $orig->bar->epoch, 1381166265, 'orig->bar';
     is $clone->bar->epoch, 1381166265, 'clone->bar';
 }
+
+note 'stringification';
+{
+    # 1381166265 == 2013-10-07 19:17:45
+    my $x = X->new(foo => 'ffo', bar => DateTime->from_epoch(epoch => 1381166265, time_zone => 'local'), hide => 'hidden');
+    my $y = Y->new(thing => $x, name => 'moniker');
+    
+    is $x->as_string,
+        '[X: bar=2013-10-07T19:17:45, foo=ffo]', 
+        'X as string';
+        
+    is $y->as_string,
+        '[Y: name=moniker, thing=[X: bar=2013-10-07T19:17:45, foo=ffo]]',
+        'Y as string';
+}
+
+note 'difference';
+{
+    # 1381166265 == 2013-10-07 19:17:45
+    # 1381186265 == 2013-10-08 00:51:05
+    my $x1 = X->new(foo => 'ffo', bar => DateTime->from_epoch(epoch => 1381166265, time_zone => 'local'), hide => 'hidden');
+    my $x2 = X->new(foo => 'ffo', bar => DateTime->from_epoch(epoch => 1381166265, time_zone => 'local'), hide => 'xxx');
+    
+    is $x1->diff($x2), '', 'no difference';
+    
+    $x2->foo('woodoo');
+    is $x1->diff($x2), q{foo:'ffo'->'woodoo'}, 'one field different';
+    
+    $x2->bar(DateTime->from_epoch(epoch => 1381186265, time_zone => 'local'));
+    is $x1->diff($x2), q{bar:'2013-10-07T19:17:45'->'2013-10-08T00:51:05', foo:'ffo'->'woodoo'}, 'two fields different';
+}
+
 
 done_testing;

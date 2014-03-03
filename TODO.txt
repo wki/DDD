@@ -1,6 +1,13 @@
 TODO
 ----
 
+- DDD::Base::Object
+    domain as a class attribute. Will be set in domain constructor.
+    remove all domain() attributes
+    Decide where to set the class attribute:
+        * Base::Object (restrict to one domain only)
+        * MyDomain::**::AllMy(Aggregates|Services)
+
 - Application-Service: transactions
 
     package X;
