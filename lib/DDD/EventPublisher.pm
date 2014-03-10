@@ -42,6 +42,7 @@ has _event_store => (
         publish     => 'push',
         _next_event => 'shift',
         _nr_events  => 'count',
+        _all_events => 'elements',
     },
 );
 
@@ -100,6 +101,18 @@ sub remove_listener {
     });
     
     $self->_delete($index) if $index >= 0;
+}
+
+=head2 has_event ( $event )
+
+returns true if there is an event of type $event. Useful for testing.
+
+=cut
+
+sub has_event {
+    my ($self, $event) = @_;
+    
+    return grep { ref($_) =~ m{\b $event \z}xms } $self->_all_events;
 }
 
 =head2 process_events

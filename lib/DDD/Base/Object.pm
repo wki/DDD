@@ -121,12 +121,17 @@ sub _components {
         
         my $name     = $attribute->name;
         my $accessor = $attribute->accessor;
-        my $value    = $self->$accessor();
+        my $value    = $accessor && $self->can($accessor) 
+                        ? $self->$accessor 
+                    :  $name && $self->can($name)
+                        ? $self->$name
+                        : "-$name: unknown-";
         
         if (blessed $value && $value->can('as_string')) {
             $value = $value->as_string;
         }
         
+        no warnings 'uninitialized';
         push @components, $name, "$value";
     }
     

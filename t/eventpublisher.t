@@ -92,6 +92,7 @@ note 'event processing';
     is $publisher->_nr_events,
         1,
         'one event in store';
+    ok $publisher->has_event('E'), 'has event "E"';
     is $x->status, '', 'callback method still not called';
     
     $publisher->process_events;
@@ -100,6 +101,7 @@ note 'event processing';
     is $publisher->_nr_events,
         0,
         'store empty';
+    ok !$publisher->has_event('E'), 'does not have event "E"';
 }
 
 done_testing;

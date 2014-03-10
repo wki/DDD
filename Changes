@@ -1,5 +1,9 @@
 This file documents the revision history for Perl extension DDD
 
+0.10  2014-03-10
+        - added a has_event() method to EventPublisher to allow easier testing
+          if events got fired.
+
 0.09  2014-03-03
         - added a simple stringification of Objects to Base::Object
           for use in eg. human readable logging
