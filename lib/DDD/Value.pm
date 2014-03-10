@@ -1,5 +1,6 @@
 package DDD::Value;
 use Moose;
+use Scalar::Util 'blessed';
 use namespace::autoclean;
 
 extends 'DDD::Base::Object';
@@ -30,6 +31,13 @@ sub is_equal {
     # FIXME: not correct if we have more complicated content. Improve!
     foreach my $attribute ($self->meta->get_attribute_list) {
         next if substr($attribute,0,1) eq '_';
+        
+        my $my_attribute    = $self->$attribute;
+        my $other_attribute = $other_value->$attribute;
+        
+        if (blessed $my_attribute && $my_attribute->can('is_equal')) {
+            return $my_attribute->is_equal($other_attribute);
+        }
         
         return if ($self->$attribute . '') ne ($other_value->$attribute . '');
     }
