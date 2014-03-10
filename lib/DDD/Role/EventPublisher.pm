@@ -25,7 +25,7 @@ has event_publisher => (
     isa        => 'DDD::EventPublisher',  ### TODO: make customizable
     lazy_build => 1,
     handles    => [
-        'publish', 'process_events',
+        'publish', 'process_events', 'has_event',
     ],
 );
 
