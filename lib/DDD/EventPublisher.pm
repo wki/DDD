@@ -39,10 +39,11 @@ has _event_store => (
     isa    => 'ArrayRef',
     default => sub { [] },
     handles => {
-        publish     => 'push',
-        _next_event => 'shift',
-        _nr_events  => 'count',
-        _all_events => 'elements',
+        publish      => 'push',
+        clear_events => 'clear', # needed for tests
+        _next_event  => 'shift',
+        _nr_events   => 'count',
+        _all_events  => 'elements',
     },
 );
 
