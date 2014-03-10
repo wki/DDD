@@ -1,5 +1,11 @@
 This file documents the revision history for Perl extension DDD
 
+0.11  2014-03-10
+        - moved compare operations into Base::Object
+        - dist.ini cleanup
+        - added some tests for base class
+        - cleaned tests failing in different time zones
+
 0.10  2014-03-10
         - added a has_event() method to EventPublisher to allow easier testing
           if events got fired.

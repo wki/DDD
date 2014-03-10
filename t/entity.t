@@ -1,5 +1,5 @@
 use Test::Most;
-
+use Scalar::Util 'refaddr';
 use ok 'DDD::Entity';
 
 {
@@ -73,7 +73,7 @@ note 'serialization';
     is $e2->id, 42, 'id';
     is $e2->bar, 'baz', 'bar';
     
-    isnt $e1, $e2, 'separate instances';
+    isnt refaddr $e1, refaddr $e2, 'separate instances';
     
     ok $e1->is_equal($e2), 'equal';
 }
