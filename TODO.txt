@@ -2,6 +2,7 @@ TODO
 ----
 
 - DDD::Base::Object
+    try to use ->is_equal when comparing objects
     domain as a class attribute. Will be set in domain constructor.
     remove all domain() attributes
     Decide where to set the class attribute:
