@@ -64,11 +64,11 @@ sub _construct_method_modifiers {
                     $self->_enter_method($method_name);
                     $result = $self->$orig(@args);
                     $self->process_events;
+                    $self->_leave_method($method_name);
                 } catch {
+                    $self->_aborted_method($method_name);
                     # rethrow
                     die $_;
-                } finally {
-                    $self->_leave_method($method_name);
                 };
 
                 return $result;

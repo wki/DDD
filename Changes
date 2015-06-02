@@ -1,5 +1,8 @@
 This file documents the revision history for Perl extension DDD
 
+0.13  2015-06-02
+        - added an _aborted_method hook called on errors.
+
 0.12  2015-06-02
         - fixed a but preventing _leave_method hook from being called
           in case of an exception
