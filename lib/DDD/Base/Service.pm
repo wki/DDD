@@ -1,5 +1,6 @@
 package DDD::Base::Service;
 use Moose;
+use Try::Tiny;
 use namespace::autoclean;
 
 extends 'DDD::Base::EventEmitter';
@@ -57,17 +58,18 @@ sub _construct_method_modifiers {
             $method_name,
             sub {
                 my ($orig, $self, @args) = @_;
-
-                $self->_enter_method($method_name);
-
-                my $result = $self->$orig(@args);
-
-                # FIXME: does a warning make sense if events are expected
-                #        but no eventpublisher is present?
-
-                $self->process_events;
-
-                $self->_leave_method($method_name);
+                my $result;
+                
+                try {
+                    $self->_enter_method($method_name);
+                    $result = $self->$orig(@args);
+                    $self->process_events;
+                } catch {
+                    # rethrow
+                    die $_;
+                } finally {
+                    $self->_leave_method($method_name);
+                };
 
                 return $result;
             }

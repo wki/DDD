@@ -1,5 +1,9 @@
 This file documents the revision history for Perl extension DDD
 
+0.12  2015-06-02
+        - fixed a but preventing _leave_method hook from being called
+          in case of an exception
+
 0.11  2014-03-10
         - moved compare operations into Base::Object
         - dist.ini cleanup
