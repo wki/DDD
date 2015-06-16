@@ -1,5 +1,8 @@
 This file documents the revision history for Perl extension DDD
 
+0.14  2915-06-16
+        - added _aborted_method callback hook in base class
+
 0.13  2015-06-02
         - added an _aborted_method hook called on errors.
 

@@ -102,6 +102,13 @@ a pluggable hook called after leaving the body of a service method
 
 sub _leave_method {}
 
+=head2 _aborted_method ( $method_name )
+
+a pluggable hook called after leaving a method on error
+
+=cut
+
+sub _aborted_method {}
 
 =head2 all_subscribed_events
 
